@@ -72,7 +72,8 @@ def parse_words(content: str, parser: str) -> list[str]:
 
 def download_text(url: str) -> str:
     with urllib.request.urlopen(url, timeout=30) as response:
-        return response.read().decode("utf-8")
+        charset = response.headers.get_content_charset() or "utf-8"
+        return response.read().decode(charset, errors="strict")
 
 
 def write_lines(path: Path, lines: Iterable[str]) -> None:
