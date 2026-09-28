@@ -61,7 +61,8 @@ Use `wordlists/generated/stats.json` for the current generated counts.
 Reporting conventions in `stats.json`:
 - `word_count`: total parsed words from the source list
 - `stemmed_word_count`: number of words passed through stemming (pre-unique)
-- `unique_word_count`: unique representative words after applying lowercase -> stem -> unique
+- `unique_word_count`: unique source words before stemming
+- `post_stem_unique_word_count`: unique representative words after applying lowercase -> stem -> unique
 - `unique_stem_count`: unique stems after applying lowercase -> stem -> unique
 - `consolidated_unique_word_count`: unique representative words across all selected sources
 - `consolidated_unique_stem_count`: unique stems across all selected sources

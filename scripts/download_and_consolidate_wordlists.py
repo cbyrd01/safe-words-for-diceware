@@ -108,7 +108,9 @@ def download_text(url: str) -> str:
         headers={"User-Agent": "safe-words-for-diceware/1.0"},
     )
     with urllib.request.urlopen(request, timeout=30) as response:
-        charset = response.headers.get_content_charset() or "utf-8"
+        content_type = response.headers.get("Content-Type", "")
+        match = re.search(r"charset=([^;\s]+)", content_type, re.IGNORECASE)
+        charset = match.group(1).strip('"').strip("'") if match else "utf-8"
         return response.read().decode(charset, errors="replace")
 
 
@@ -167,8 +169,9 @@ def main() -> None:
                 "name": source.name,
                 "url": source.url,
                 "word_count": len(words),
-                "unique_word_count": len(unique_words_after_stemming),
+                "unique_word_count": len(set(words)),
                 "stemmed_word_count": len(words),
+                "post_stem_unique_word_count": len(unique_words_after_stemming),
                 "unique_stem_count": len(unique_stems),
                 "uniqueness_rule": "lowercase -> stem -> unique",
                 "output_file": str(per_source_unique_path.relative_to(repo_root)),
