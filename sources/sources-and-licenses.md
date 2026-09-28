@@ -1,39 +1,54 @@
-# Sources, licenses, and curation notes
+# Sources, licenses, and curation notes (English-only)
+
+## Scope for this effort
+This effort is restricted to **English** word lists only.
 
 ## Evaluation criteria
-A source is considered "good" if it has:
-1. a permissive or reusable license,
+A source is considered "best" for this project when it has:
+1. a permissive/reusable license,
 2. clear attribution requirements,
-3. enough quality/curation to support safe-word filtering.
+3. explicit safety-aware curation (or clear evidence of offensive-term filtering),
+4. enough vocabulary quality for Diceware-style passphrase generation.
 
-## Candidate sources
+## English candidate sources reviewed
 
-### 1) EFF large wordlist
-- Source: https://www.eff.org/files/2016/07/18/eff_large_wordlist.txt
-- License (as redistributed in `ulif/diceware` COPYRIGHT): CC-BY-3.0
-- Attribution needed: yes (Electronic Frontier Foundation and CC-BY notice)
-- Safety curation: designed for memorable passphrases, **not specifically safety/non-offense curation**
-- Verdict: **Good candidate source** with attribution obligations; requires additional safety filtering.
+### 1) Asian Diceware (English output)
+- Source: https://github.com/anoni-net/asian-diceware
+- English list used: `output/asian_diceware_7776.txt`
+- License: data/wordlists are CC BY 4.0 (`LICENSE-DATA`); code is MIT.
+- Attribution needed: yes (CC BY attribution + indicate changes).
+- Safety curation: explicit "No offensive" acceptance criterion and profanity/slur-sensitive filtering in project spec/process.
+- Verdict: **Best source** for this project's safety objective.
 
-### 2) BIP-39 English wordlist
-- Source: `bitcoin/bips` (`bip-0039/english.txt`), with BIP-39 spec listing `License: MIT`
-- License: MIT (per BIP-39 document)
-- Attribution needed: retain MIT license notice in redistribution contexts
-- Safety curation: created for wallet mnemonic quality (distinctness/usability), **not social-safety curation**
-- Verdict: **Good candidate source**; permissive and straightforward for reuse.
+### 2) EFF large wordlist (English)
+- Source (canonical): https://www.eff.org/files/2016/07/18/eff_large_wordlist.txt
+- Source used for automation reliability: https://raw.githubusercontent.com/ulif/diceware/master/diceware/wordlists/wordlist_en_eff.txt
+- License: CC BY 3.0 (as documented in `ulif/diceware` COPYRIGHT for the EFF file).
+- Attribution needed: yes (EFF + CC BY 3.0).
+- Safety curation: curated for passphrase usability and includes avoidance rationale for problematic/confusable words, but not a full modern safety policy.
+- Verdict: **Strong source** with attribution requirements.
 
-### 3) Open English WordNet (for lexical filtering/modeling)
-- Source: https://github.com/globalwordnet/english-wordnet
-- License: CC-BY-4.0, derived from Princeton WordNet with attribution requirements
-- Attribution needed: yes (Open English WordNet + Princeton WordNet attribution)
-- Safety curation: lexical graph resource; useful for POS/type categorization, not a safe-word list by itself
-- Verdict: **Good supporting source** for modeling/filtering, not a standalone final list.
+### 3) BIP-39 English wordlist
+- Source: `bitcoin/bips` (`bip-0039/english.txt`)
+- License: MIT (BIP-39 spec license).
+- Attribution needed: retain MIT notice in redistribution contexts.
+- Safety curation: mnemonic quality and usability curation; not primarily social-safety curation.
+- Verdict: **Good permissive baseline source**.
 
-## Source choice for v0 list
-For the initial `safe-words-v0.txt`, this repo uses a conservative subset based on BIP-39-style vocabulary and additional manual safety filtering.
+## English sources not selected as primary inputs
 
-## Positive model applied (v0)
-- Include mostly concrete nouns and neutral adjectives.
-- Exclude verbs and adverbs.
-- Exclude terms related to violence, slurs, hate, exploitation, anatomy/sexual content, substances, coercion, and charged ideology.
-- Exclude words likely to create problematic compounds when paired (for example role/kinship/power pairings).
+### Orchard Street "clean" Diceware list
+- Source: https://github.com/sts10/orchard-street-wordlists
+- Safety signal: explicit profanity exclusion.
+- License: CC BY-SA 4.0.
+- Why not primary: strong safety curation, but ShareAlike is less permissive than preferred for this repository's base source set.
+
+## Selected source set for automation
+The consolidation script uses these English sources:
+1. Asian Diceware 7776 (CC BY 4.0)
+2. EFF large wordlist (CC BY 3.0; fetched via GitHub mirror)
+3. BIP-39 English (MIT)
+
+## Notes
+- Inclusion in the consolidated candidate list does **not** mean final acceptance.
+- Additional manual safety review and combination-level screening are still required.
