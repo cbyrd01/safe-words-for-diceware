@@ -52,3 +52,17 @@ The consolidation script uses these English sources:
 ## Notes
 - Inclusion in the consolidated candidate list does **not** mean final acceptance.
 - Additional manual safety review and combination-level screening are still required.
+
+## Current consolidation results
+
+From `/home/runner/work/safe-words-for-diceware/safe-words-for-diceware/wordlists/generated/stats.json`:
+- Asian Diceware 7776 (English): 7,776 words, 7,776 unique
+- EFF large (English mirror): 7,776 words, 7,776 unique
+- BIP-39 English: 2,048 words, 2,048 unique
+- Consolidated unique words across all selected sources: **13,088**
+
+Result files:
+- `/home/runner/work/safe-words-for-diceware/safe-words-for-diceware/wordlists/generated/consolidated-english-words.txt`
+- `/home/runner/work/safe-words-for-diceware/safe-words-for-diceware/wordlists/generated/by-source/asian_diceware_7776_en.txt`
+- `/home/runner/work/safe-words-for-diceware/safe-words-for-diceware/wordlists/generated/by-source/eff_large_en.txt`
+- `/home/runner/work/safe-words-for-diceware/safe-words-for-diceware/wordlists/generated/by-source/bip39_english.txt`

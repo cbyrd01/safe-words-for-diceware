@@ -40,3 +40,16 @@ A starter list is provided at:
 - `wordlists/safe-words-v0.txt`
 
 This is intentionally small and conservative to prioritize safety over size in the first revision.
+
+## English source consolidation
+
+Use `/home/runner/work/safe-words-for-diceware/safe-words-for-diceware/scripts/download_and_consolidate_wordlists.py` to:
+- download selected English source lists,
+- normalize and deduplicate per source,
+- build a consolidated unique-word list,
+- generate statistics output.
+
+Generated outputs:
+- `/home/runner/work/safe-words-for-diceware/safe-words-for-diceware/wordlists/generated/stats.json`
+- `/home/runner/work/safe-words-for-diceware/safe-words-for-diceware/wordlists/generated/consolidated-english-words.txt`
+- `/home/runner/work/safe-words-for-diceware/safe-words-for-diceware/wordlists/generated/by-source/*.txt`
