@@ -56,12 +56,15 @@ The consolidation script uses these English sources:
 
 ## Current consolidation results
 
-From `wordlists/generated/stats.json` using uniqueness rule **lowercase -> stem -> unique** (pre-filter stage):
-- Asian Diceware 7776 (English): 7,776 words, 7,679 unique words after stemming, 7,679 unique stems
-- EFF large (English mirror): 7,772 words, 7,772 unique words after stemming, 7,772 unique stems
-- BIP-39 English: 2,048 words, 2,048 unique words after stemming, 2,048 unique stems
-- Consolidated unique words across all selected sources (post-stem uniqueness): **12,711**
-- Consolidated unique stems across all selected sources: **12,711**
+Use `wordlists/generated/stats.json` for the current generated counts.
+
+Reporting conventions in `stats.json`:
+- `word_count`: total parsed words from the source list
+- `stemmed_word_count`: number of words passed through stemming (pre-unique)
+- `unique_word_count`: unique representative words after applying lowercase -> stem -> unique
+- `unique_stem_count`: unique stems after applying lowercase -> stem -> unique
+- `consolidated_unique_word_count`: unique representative words across all selected sources
+- `consolidated_unique_stem_count`: unique stems across all selected sources
 
 Result files (generated at runtime by the script):
 - `wordlists/generated/consolidated-english-words.txt`

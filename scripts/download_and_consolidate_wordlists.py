@@ -81,11 +81,6 @@ def stem_word(word: str) -> str:
         if WORD_PATTERN.match(candidate):
             return candidate
 
-    if stem.endswith("es") and len(stem) > 4:
-        candidate = stem[:-2]
-        if WORD_PATTERN.match(candidate) and len(candidate) >= 3:
-            return candidate
-
     if stem.endswith("s") and len(stem) > 3 and not stem.endswith(("ss", "us", "is")):
         candidate = stem[:-1]
         if WORD_PATTERN.match(candidate) and len(candidate) >= 3:
@@ -173,7 +168,7 @@ def main() -> None:
                 "url": source.url,
                 "word_count": len(words),
                 "unique_word_count": len(unique_words_after_stemming),
-                "stem_count": len(words),
+                "stemmed_word_count": len(words),
                 "unique_stem_count": len(unique_stems),
                 "uniqueness_rule": "lowercase -> stem -> unique",
                 "output_file": str(per_source_unique_path.relative_to(repo_root)),
