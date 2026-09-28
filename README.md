@@ -65,4 +65,4 @@ Generated outputs:
 - `wordlists/generated/by-source/*.txt`
 - `wordlists/generated/by-source-stems/*.txt`
 
-These generated list files are intermediate pre-filter artifacts and require additional safety filtering before publication.
+These generated list files are intermediate pre-filter artifacts and require additional safety filtering before publication. `wordlists/generated/stats.json` is committed as a snapshot of the latest run.

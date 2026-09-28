@@ -144,7 +144,10 @@ def main() -> None:
     script_path = Path(__file__).resolve()
     repo_root = script_path.parent.parent
     requested_output = Path(args.output_dir)
-    output_dir = requested_output.resolve() if requested_output.is_absolute() else (repo_root / requested_output).resolve()
+    if requested_output.is_absolute():
+        output_dir = requested_output.resolve()
+    else:
+        output_dir = (repo_root / requested_output).resolve()
     downloads_dir = output_dir / "downloads"
 
     consolidated_stem_to_word: dict[str, str] = {}
