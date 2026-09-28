@@ -71,7 +71,11 @@ def parse_words(content: str, parser: str) -> list[str]:
 
 
 def download_text(url: str) -> str:
-    with urllib.request.urlopen(url, timeout=30) as response:
+    request = urllib.request.Request(
+        url,
+        headers={"User-Agent": "safe-words-for-diceware/1.0"},
+    )
+    with urllib.request.urlopen(request, timeout=30) as response:
         charset = response.headers.get_content_charset() or "utf-8"
         return response.read().decode(charset, errors="strict")
 

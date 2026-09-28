@@ -49,6 +49,13 @@ Use `scripts/download_and_consolidate_wordlists.py` to:
 - build a consolidated unique-word list,
 - generate statistics output.
 
+Minimum Python version: **3.9+**.
+
+Example:
+```bash
+python scripts/download_and_consolidate_wordlists.py
+```
+
 Generated outputs:
 - `wordlists/generated/stats.json`
 - `wordlists/generated/consolidated-english-words.txt`
