@@ -114,6 +114,13 @@ def download_text(url: str) -> str:
         return response.read().decode(charset, errors="replace")
 
 
+
+def display_path(path: Path, repo_root: Path) -> str:
+    try:
+        return str(path.relative_to(repo_root))
+    except ValueError:
+        return str(path)
+
 def write_lines(path: Path, lines: Iterable[str]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding="utf-8", newline="\n") as handle:
@@ -136,7 +143,8 @@ def main() -> None:
 
     script_path = Path(__file__).resolve()
     repo_root = script_path.parent.parent
-    output_dir = (repo_root / args.output_dir).resolve()
+    requested_output = Path(args.output_dir)
+    output_dir = requested_output.resolve() if requested_output.is_absolute() else (repo_root / requested_output).resolve()
     downloads_dir = output_dir / "downloads"
 
     consolidated_stem_to_word: dict[str, str] = {}
@@ -174,8 +182,8 @@ def main() -> None:
                 "post_stem_unique_word_count": len(unique_words_after_stemming),
                 "unique_stem_count": len(unique_stems),
                 "uniqueness_rule": "lowercase -> stem -> unique",
-                "output_file": str(per_source_unique_path.relative_to(repo_root)),
-                "stems_output_file": str(per_source_stem_path.relative_to(repo_root)),
+                "output_file": display_path(per_source_unique_path, repo_root),
+                "stems_output_file": display_path(per_source_stem_path, repo_root),
             }
         )
 
@@ -193,8 +201,8 @@ def main() -> None:
         "uniqueness_rule": "lowercase -> stem -> unique",
         "consolidated_unique_word_count": len(consolidated_words),
         "consolidated_unique_stem_count": len(consolidated_stems),
-        "consolidated_output_file": str(consolidated_words_path.relative_to(repo_root)),
-        "consolidated_stems_output_file": str(consolidated_stems_path.relative_to(repo_root)),
+        "consolidated_output_file": display_path(consolidated_words_path, repo_root),
+        "consolidated_stems_output_file": display_path(consolidated_stems_path, repo_root),
     }
 
     stats_path = output_dir / "stats.json"
