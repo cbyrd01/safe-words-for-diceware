@@ -55,14 +55,19 @@ The consolidation script uses these English sources:
 
 ## Current consolidation results
 
-From `wordlists/generated/stats.json`:
-- Asian Diceware 7776 (English): 7,776 words, 7,776 unique
-- EFF large (English mirror): 7,776 words, 7,776 unique
-- BIP-39 English: 2,048 words, 2,048 unique
-- Consolidated unique words across all selected sources: **13,088**
+From `wordlists/generated/stats.json` using uniqueness rule **lowercase -> stem -> unique**:
+- Asian Diceware 7776 (English): 7,776 words, 7,106 unique words after stemming, 7,106 unique stems
+- EFF large (English mirror): 7,776 words, 7,416 unique words after stemming, 7,416 unique stems
+- BIP-39 English: 2,048 words, 2,043 unique words after stemming, 2,043 unique stems
+- Consolidated unique words across all selected sources (post-stem uniqueness): **11,421**
+- Consolidated unique stems across all selected sources: **11,421**
 
 Result files:
 - `wordlists/generated/consolidated-english-words.txt`
+- `wordlists/generated/consolidated-english-stems.txt`
 - `wordlists/generated/by-source/asian_diceware_7776_en.txt`
 - `wordlists/generated/by-source/eff_large_en.txt`
 - `wordlists/generated/by-source/bip39_english.txt`
+- `wordlists/generated/by-source-stems/asian_diceware_7776_en.txt`
+- `wordlists/generated/by-source-stems/eff_large_en.txt`
+- `wordlists/generated/by-source-stems/bip39_english.txt`

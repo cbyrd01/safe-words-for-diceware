@@ -54,7 +54,6 @@ def parse_words(content: str, parser: str) -> list[str]:
             continue
 
         if parser == "eff_tab":
-            # EFF format: "12345<TAB>word"
             if "\t" in line:
                 _, candidate = line.split("\t", maxsplit=1)
             else:
@@ -68,6 +67,51 @@ def parse_words(content: str, parser: str) -> list[str]:
             words.append(word)
 
     return words
+
+
+def stem_word(word: str) -> str:
+    """Return a simple English stem for counting/aggregation use."""
+    stem = word
+
+    if stem.endswith("'s") and len(stem) > 3:
+        stem = stem[:-2]
+
+    if len(stem) <= 3:
+        return stem
+
+    if stem.endswith("ies") and len(stem) > 4:
+        stem = stem[:-3] + "y"
+    elif stem.endswith("ing") and len(stem) > 5:
+        stem = stem[:-3]
+    elif stem.endswith("ed") and len(stem) > 4:
+        stem = stem[:-2]
+    elif stem.endswith("es") and len(stem) > 4 and not stem.endswith(("aes", "ees", "oes")):
+        stem = stem[:-2]
+    elif stem.endswith("s") and len(stem) > 3 and not stem.endswith(("ss", "us", "is")):
+        stem = stem[:-1]
+
+    if len(stem) > 4 and stem[-1] == stem[-2] and stem[-1] in "bcdfghjklmnpqrstvwxyz":
+        stem = stem[:-1]
+
+    for suffix in ("ment", "ness", "ful", "less", "ly", "er", "est"):
+        if stem.endswith(suffix) and len(stem) - len(suffix) >= 3:
+            stem = stem[: -len(suffix)]
+            break
+
+    return stem
+
+
+def unique_after_stemming(words: list[str]) -> dict[str, str]:
+    """Map stem -> representative word (alphabetically smallest variant)."""
+    stem_to_word: dict[str, str] = {}
+
+    for word in words:
+        stem = stem_word(word)
+        current = stem_to_word.get(stem)
+        if current is None or word < current:
+            stem_to_word[stem] = word
+
+    return stem_to_word
 
 
 def download_text(url: str) -> str:
@@ -105,7 +149,7 @@ def main() -> None:
     output_dir = (repo_root / args.output_dir).resolve()
     downloads_dir = output_dir / "downloads"
 
-    consolidated: set[str] = set()
+    consolidated_stem_to_word: dict[str, str] = {}
     source_stats: list[dict[str, object]] = []
 
     for source in SOURCES:
@@ -115,37 +159,58 @@ def main() -> None:
         downloaded_path.write_text(content, encoding="utf-8")
 
         words = parse_words(content, source.parser)
-        unique_words = sorted(set(words))
-        consolidated.update(unique_words)
+        stem_to_word = unique_after_stemming(words)
+
+        unique_stems = sorted(stem_to_word.keys())
+        unique_words_after_stemming = sorted(stem_to_word.values())
+
+        for stem, word in stem_to_word.items():
+            current = consolidated_stem_to_word.get(stem)
+            if current is None or word < current:
+                consolidated_stem_to_word[stem] = word
 
         per_source_unique_path = output_dir / "by-source" / f"{source.name}.txt"
-        write_lines(per_source_unique_path, unique_words)
+        per_source_stem_path = output_dir / "by-source-stems" / f"{source.name}.txt"
+        write_lines(per_source_unique_path, unique_words_after_stemming)
+        write_lines(per_source_stem_path, unique_stems)
 
         source_stats.append(
             {
                 "name": source.name,
                 "url": source.url,
                 "word_count": len(words),
-                "unique_word_count": len(unique_words),
+                "unique_word_count": len(unique_words_after_stemming),
+                "stem_count": len(words),
+                "unique_stem_count": len(unique_stems),
+                "uniqueness_rule": "lowercase -> stem -> unique",
                 "output_file": str(per_source_unique_path.relative_to(repo_root)),
+                "stems_output_file": str(per_source_stem_path.relative_to(repo_root)),
             }
         )
 
-    consolidated_words = sorted(consolidated)
-    consolidated_path = output_dir / "consolidated-english-words.txt"
-    write_lines(consolidated_path, consolidated_words)
+    consolidated_stems = sorted(consolidated_stem_to_word.keys())
+    consolidated_words = sorted(consolidated_stem_to_word.values())
+
+    consolidated_words_path = output_dir / "consolidated-english-words.txt"
+    consolidated_stems_path = output_dir / "consolidated-english-stems.txt"
+    write_lines(consolidated_words_path, consolidated_words)
+    write_lines(consolidated_stems_path, consolidated_stems)
 
     stats = {
         "sources": source_stats,
         "total_sources": len(SOURCES),
+        "uniqueness_rule": "lowercase -> stem -> unique",
         "consolidated_unique_word_count": len(consolidated_words),
-        "consolidated_output_file": str(consolidated_path.relative_to(repo_root)),
+        "consolidated_unique_stem_count": len(consolidated_stems),
+        "consolidated_output_file": str(consolidated_words_path.relative_to(repo_root)),
+        "consolidated_stems_output_file": str(consolidated_stems_path.relative_to(repo_root)),
     }
 
     stats_path = output_dir / "stats.json"
     stats_path.write_text(json.dumps(stats, indent=2) + "\n", encoding="utf-8")
 
-    print(f"Wrote consolidated words to: {consolidated_path}")
+    print(f"Wrote consolidated words to: {consolidated_words_path}")
+    print(f"Wrote consolidated stems to: {consolidated_stems_path}")
     print(f"Wrote stats to: {stats_path}")
 
 

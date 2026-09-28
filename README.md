@@ -45,7 +45,7 @@ This is intentionally small and conservative to prioritize safety over size in t
 
 Use `scripts/download_and_consolidate_wordlists.py` to:
 - download selected English source lists,
-- normalize and deduplicate per source,
+- normalize to lowercase, reduce to stems, then deduplicate per source,
 - build a consolidated unique-word list,
 - generate statistics output.
 
@@ -56,7 +56,11 @@ Example:
 python scripts/download_and_consolidate_wordlists.py
 ```
 
+Uniqueness rule: **lowercase -> stem -> unique**.
+
 Generated outputs:
 - `wordlists/generated/stats.json`
 - `wordlists/generated/consolidated-english-words.txt`
+- `wordlists/generated/consolidated-english-stems.txt`
 - `wordlists/generated/by-source/*.txt`
+- `wordlists/generated/by-source-stems/*.txt`
