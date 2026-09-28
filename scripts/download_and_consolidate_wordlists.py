@@ -12,7 +12,7 @@ from pathlib import Path
 from typing import Iterable
 
 
-WORD_PATTERN = re.compile(r"^[a-z][a-z'\-]*$")
+WORD_PATTERN = re.compile(r"^[a-z]+$")
 
 
 @dataclass(frozen=True)
@@ -70,33 +70,26 @@ def parse_words(content: str, parser: str) -> list[str]:
 
 
 def stem_word(word: str) -> str:
-    """Return a simple English stem for counting/aggregation use."""
+    """Return a conservative English stem for counting/aggregation use."""
     stem = word
-
-    if stem.endswith("'s") and len(stem) > 3:
-        stem = stem[:-2]
 
     if len(stem) <= 3:
         return stem
 
     if stem.endswith("ies") and len(stem) > 4:
-        stem = stem[:-3] + "y"
-    elif stem.endswith("ing") and len(stem) > 5:
-        stem = stem[:-3]
-    elif stem.endswith("ed") and len(stem) > 4:
-        stem = stem[:-2]
-    elif stem.endswith("es") and len(stem) > 4 and not stem.endswith(("aes", "ees", "oes")):
-        stem = stem[:-2]
-    elif stem.endswith("s") and len(stem) > 3 and not stem.endswith(("ss", "us", "is")):
-        stem = stem[:-1]
+        candidate = stem[:-3] + "y"
+        if WORD_PATTERN.match(candidate):
+            return candidate
 
-    if len(stem) > 4 and stem[-1] == stem[-2] and stem[-1] in "bcdfghjklmnpqrstvwxyz":
-        stem = stem[:-1]
+    if stem.endswith("es") and len(stem) > 4:
+        candidate = stem[:-2]
+        if WORD_PATTERN.match(candidate) and len(candidate) >= 3:
+            return candidate
 
-    for suffix in ("ment", "ness", "ful", "less", "ly", "er", "est"):
-        if stem.endswith(suffix) and len(stem) - len(suffix) >= 3:
-            stem = stem[: -len(suffix)]
-            break
+    if stem.endswith("s") and len(stem) > 3 and not stem.endswith(("ss", "us", "is")):
+        candidate = stem[:-1]
+        if WORD_PATTERN.match(candidate) and len(candidate) >= 3:
+            return candidate
 
     return stem
 
@@ -121,7 +114,7 @@ def download_text(url: str) -> str:
     )
     with urllib.request.urlopen(request, timeout=30) as response:
         charset = response.headers.get_content_charset() or "utf-8"
-        return response.read().decode(charset, errors="strict")
+        return response.read().decode(charset, errors="replace")
 
 
 def write_lines(path: Path, lines: Iterable[str]) -> None:

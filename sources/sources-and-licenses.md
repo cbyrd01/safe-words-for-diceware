@@ -52,17 +52,18 @@ The consolidation script uses these English sources:
 ## Notes
 - Inclusion in the consolidated candidate list does **not** mean final acceptance.
 - Additional manual safety review and combination-level screening are still required.
+- Pre-filter consolidation can still include unsafe terms and must not be treated as a final safe list.
 
 ## Current consolidation results
 
-From `wordlists/generated/stats.json` using uniqueness rule **lowercase -> stem -> unique**:
-- Asian Diceware 7776 (English): 7,776 words, 7,106 unique words after stemming, 7,106 unique stems
-- EFF large (English mirror): 7,776 words, 7,416 unique words after stemming, 7,416 unique stems
-- BIP-39 English: 2,048 words, 2,043 unique words after stemming, 2,043 unique stems
-- Consolidated unique words across all selected sources (post-stem uniqueness): **11,421**
-- Consolidated unique stems across all selected sources: **11,421**
+From `wordlists/generated/stats.json` using uniqueness rule **lowercase -> stem -> unique** (pre-filter stage):
+- Asian Diceware 7776 (English): 7,776 words, 7,679 unique words after stemming, 7,679 unique stems
+- EFF large (English mirror): 7,772 words, 7,772 unique words after stemming, 7,772 unique stems
+- BIP-39 English: 2,048 words, 2,048 unique words after stemming, 2,048 unique stems
+- Consolidated unique words across all selected sources (post-stem uniqueness): **12,711**
+- Consolidated unique stems across all selected sources: **12,711**
 
-Result files:
+Result files (generated at runtime by the script):
 - `wordlists/generated/consolidated-english-words.txt`
 - `wordlists/generated/consolidated-english-stems.txt`
 - `wordlists/generated/by-source/asian_diceware_7776_en.txt`

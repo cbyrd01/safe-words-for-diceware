@@ -216,3 +216,10 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Generated wordlist artifacts (runtime outputs)
+wordlists/generated/by-source/
+wordlists/generated/by-source-stems/
+wordlists/generated/downloads/
+wordlists/generated/consolidated-english-words.txt
+wordlists/generated/consolidated-english-stems.txt

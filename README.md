@@ -64,3 +64,5 @@ Generated outputs:
 - `wordlists/generated/consolidated-english-stems.txt`
 - `wordlists/generated/by-source/*.txt`
 - `wordlists/generated/by-source-stems/*.txt`
+
+These generated list files are intermediate pre-filter artifacts and require additional safety filtering before publication.
