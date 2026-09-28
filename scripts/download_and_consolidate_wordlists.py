@@ -46,6 +46,9 @@ SOURCES: tuple[Source, ...] = (
 
 
 def parse_words(content: str, parser: str) -> list[str]:
+    if parser not in {"plain", "eff_tab"}:
+        raise ValueError(f"Unsupported parser: {parser}")
+
     words: list[str] = []
 
     for raw_line in content.splitlines():
@@ -111,7 +114,14 @@ def download_text(url: str) -> str:
         content_type = response.headers.get("Content-Type", "")
         match = re.search(r"charset=([^;\s]+)", content_type, re.IGNORECASE)
         charset = match.group(1).strip('"').strip("'") if match else "utf-8"
-        return response.read().decode(charset, errors="replace")
+        payload = response.read()
+
+    try:
+        return payload.decode(charset, errors="strict")
+    except UnicodeDecodeError as exc:
+        raise ValueError(
+            f"Failed to decode {url} with charset '{charset}'"
+        ) from exc
 
 
 
