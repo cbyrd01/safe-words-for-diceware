@@ -128,6 +128,13 @@ def load_wordnet(zip_path: Path):
     import nltk
     from nltk.corpus.reader.wordnet import WordNetCorpusReader
 
+    class OewnReader(WordNetCorpusReader):
+        def map_wn(self, version="wordnet"):
+            # NLTK maps non-3.0 WordNets to Princeton WordNet 3.0 for
+            # multilingual (OMW) lookups, which needs that corpus installed.
+            # Nothing here uses OMW, so skip the mapping.
+            return None
+
     root = zip_path.parent / "english_wordnet"
     marker = root / ".sha256"
     if not marker.exists() or marker.read_text().strip() != WORDNET.sha256:
@@ -139,7 +146,7 @@ def load_wordnet(zip_path: Path):
         nltk.data.path.insert(0, str(root.parent))
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")  # "multilingual functions are not available"
-        return WordNetCorpusReader(str(root), None)
+        return OewnReader(str(root), None)
 
 
 @dataclass
