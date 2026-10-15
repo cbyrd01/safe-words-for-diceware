@@ -3,7 +3,8 @@
 #
 # Only these rules can be waived: pos, category, denied-category,
 # denied-hypernym, denied-gloss, denied-primary-hypernym,
-# denied-primary-gloss, usage-label, verb-form, proper-name, gendered.
+# denied-primary-gloss, usage-label, verb-form, proper-name, gendered,
+# unfamiliar (to restore a familiar word the commonness signals miss).
 # Profanity-list hits, the manual denylist and combination drops can never be
 # waived. Keep this list short: every waiver is a judgement call that needs
 # human review.

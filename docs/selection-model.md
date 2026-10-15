@@ -97,6 +97,7 @@ Rules marked † look only at the word's main (most frequent) sense.
 | verb-form | verb forms with no attested noun use (`tore`, `seizing`) |
 | profanity-list, scowl-usage | words on LDNOOBW or dsojevic (exact or plural match: `snowballing` is slang, `snowball` is not), or marked offensive or vulgar by SCOWL |
 | duplicate | spelling variants (`racoon`), exact synonyms (`cougar`/`puma`), and words sharing a Snowball stem with a listed word (`stairs`, `housing`, `magnetism`); the commoner, then shorter, word is kept |
+| unfamiliar | SCOWL size-50 words with no familiarity evidence (see below) |
 | manual-denylist | review decisions in `filters/denylist.txt` |
 | combination | one word of every flagged pair (see below) |
 
@@ -116,11 +117,37 @@ ties drop the less common word.
 
 ## Commonness and size
 
-SCOWL size ≤ 50 (medium dictionary) gives 2,634 words. Size 60 would add
-~700 words (+0.3 bits/word), most of them obscure (`calcimine`, `reactance`,
-`refection`). Allowing 10-letter words adds 270 (+0.1 bits/word). Neither
-is worth the loss in memorability. Passphrase strength comes from word
-count: each extra word adds 11.4 bits.
+WordNet is full of words few people know, so candidates must also be
+familiar. Every safe word was scored against an independent proxy: whether
+it occurs at all in a US TV and film frequency list (zxcvbn's, used only for
+this evaluation). Options compared:
+
+| Commonness filter | Words | Bits/word | Not in TV/film list |
+|---|---|---|---|
+| SCOWL size ≤ 35 | 1,455 | 10.5 | 15% |
+| SCOWL size ≤ 40 | 1,591 | 10.6 | 17% |
+| SCOWL size ≤ 50 | 2,634 | 11.4 | **40%** (`bast`, `percale`, `aspic`, `hominy`, `dacha`) |
+| **≤ 40, or ≤ 50 with familiarity evidence (chosen)** | **1,763** | **10.8** | ~22% |
+| SCOWL size ≤ 60 | ~3,400 | 11.7 | higher (`calcimine`, `reactance`, `refection`) |
+
+"Familiarity evidence" means the word is in SCOWL's ESL-learner (`3esl`) or
+UK-frequency (`ukfreq`) sources, or is attested in WordNet's sense-tagged
+corpus. Words that fail get the `unfamiliar` rule. Other signals were tested
+and rejected:
+- Two or more WordNet senses adds 261 words, but they are mixed: `thyme`
+  and `cumin`, but also `whelk`, `scrod` and `sump`.
+- Short words add 178, mostly obscure (`bast`, `pipit`, `oakum`).
+
+The proxy overstates obscurity: most chosen words missing from TV dialogue
+are ordinary nouns (`birdbath`, `xylophone`, `ladybug`, `parasol`).
+
+A familiar word that misses the signals (`thyme`, `hummus`) can be
+restored with an `unfamiliar` waiver in `filters/rule-waivers.txt`. Allowing
+10-letter words would add ~270 words (+0.1 bits/word); not worth the
+length.
+
+Passphrase strength comes from word count: each word adds 10.8 bits, so
+8 words give ~86 bits.
 
 ## Review
 

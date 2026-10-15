@@ -41,6 +41,9 @@ class ScowlParserTest(unittest.TestCase):
         self.assertNotIn("aachen", self.words)
         self.assertNotIn("-", self.words)
 
+    def test_source_tags_of_noun_entries_are_kept(self):
+        self.assertEqual(self.words["apple"].tags, {"", "12dicts", "3esl"})
+
     def test_lemma_annotations_are_stripped(self):
         self.assertEqual(self.words["kettle"].size, 70)
 

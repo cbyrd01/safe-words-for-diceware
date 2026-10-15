@@ -86,6 +86,12 @@ DSOJEVIC = PinnedFile(
 
 # SCOWL sizes: 35 small, 40, 50 medium, 60 medium-large, 70 large.
 DEFAULT_MAX_SCOWL_SIZE = 50
+# Familiarity: words up to size 40 always count as familiar. Size-50 words
+# need evidence: listed in SCOWL's ESL-learner or UK-frequency sources, or
+# attested in WordNet's sense-tagged corpus. This drops dictionary-only words
+# such as 'bast', 'percale' and 'aspic'.
+FAMILIAR_SCOWL_SIZE = 40
+FAMILIARITY_TAGS = frozenset({"3esl", "ukfreq"})
 
 # Join screening ("zebra" + "pear" -> "zeb-rape-ar") only uses the most severe
 # dsojevic terms of at least 4 letters. Milder or shorter terms ("spic" in
@@ -140,6 +146,7 @@ def load_wordnet(zip_path: Path):
 class ScowlWord:
     size: int = 99  # smallest SCOWL size of a lowercase noun entry
     usage: set = field(default_factory=set)  # usage notes on any entry
+    tags: set = field(default_factory=set)  # source tags on noun entries ('3esl', ...)
 
 
 _SCOWL_VARIANT = re.compile(r"(?:[ABZCD_][.=?v~V@x-]?)(?: [ABZCD_][.=?v~V@x-]?)*(?: \{\d+\})?|\+")
@@ -178,6 +185,7 @@ def parse_scowl(text: str) -> dict[str, ScowlWord]:
             entry.usage.add(lemma.group("usage"))
         if (lemma.group("pos") or "").startswith("n"):
             entry.size = min(entry.size, int(size.group(1)))
+            entry.tags.update(re.findall(r"\[([^\]]*)\]", fields[0]))
     return words
 
 
@@ -276,7 +284,7 @@ def write_lines(path: Path, lines) -> None:
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--max-scowl-size", type=int, default=DEFAULT_MAX_SCOWL_SIZE,
-                        help=f"most obscure SCOWL size to accept (default {DEFAULT_MAX_SCOWL_SIZE})")
+                        help=f"largest SCOWL size considered (default {DEFAULT_MAX_SCOWL_SIZE})")
     parser.add_argument("--dice", type=int, default=4, help="dice per word for the numbered list (default 4)")
     parser.add_argument("--offline", action="store_true", help="use cached downloads; never touch the network")
     args = parser.parse_args()
@@ -315,9 +323,21 @@ def main() -> None:
     )
     senses_by_word = {word: senses_for(wn, word) for word in candidates}
 
+    def tagged_count(word: str) -> int:
+        return sum(s.count for s in rules.common_senses(senses_by_word[word]))
+
+    def familiar(word: str) -> bool:
+        entry = scowl[word]
+        return entry.size <= FAMILIAR_SCOWL_SIZE or bool(entry.tags & FAMILIARITY_TAGS) or tagged_count(word) > 0
+
     decisions: dict[str, list[rules.Reason]] = {}
     for word in candidates:
         reasons = rules.evaluate_word(word, senses_by_word[word], categories, overrides, wn.morphy(word, "v"))
+        if not familiar(word) and "unfamiliar" not in overrides.waivers.get(word, frozenset()):
+            reasons.append(rules.Reason(
+                "unfamiliar",
+                f"SCOWL size {scowl[word].size} with no learner-dictionary, frequency-list or WordNet-corpus evidence",
+            ))
         flagged = sorted(note for note in scowl[word].usage if SCOWL_DENIED_USAGE.match(note))
         if flagged:
             reasons.insert(0, rules.Reason("scowl-usage", f"SCOWL marks it {', '.join(flagged)}"))
@@ -325,9 +345,6 @@ def main() -> None:
         if hit:
             reasons.insert(0, rules.Reason("profanity-list", f"listed in {hit}"))
         decisions[word] = reasons
-
-    def tagged_count(word: str) -> int:
-        return sum(s.count for s in rules.common_senses(senses_by_word[word]))
 
     def drop_priority(word: str) -> tuple:
         """Larger = less desirable: rarer in SCOWL, rarer in WordNet's tagged
@@ -467,6 +484,11 @@ def main() -> None:
         "dice_list_bits_per_word": round(math.log2(dice_size), 2),
         "safe_words_by_category": dict(Counter(category_of(w) for w in final).most_common()),
         "max_scowl_size": args.max_scowl_size,
+        "familiarity": {
+            "always_familiar_up_to_scowl_size": FAMILIAR_SCOWL_SIZE,
+            "evidence_tags": sorted(FAMILIARITY_TAGS),
+            "or_wordnet_tagged_corpus": True,
+        },
         "inputs": [
             {"name": p.name, "url": p.url, "sha256": p.sha256, "license": p.license}
             for p in (WORDNET, SCOWL, LDNOOBW, DSOJEVIC)

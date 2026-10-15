@@ -91,7 +91,7 @@ class FilterFileFormatTest(unittest.TestCase):
     def test_rule_waivers_only_waive_soft_rules(self):
         waivable = {"pos", "category", "denied-category", "denied-hypernym", "denied-gloss",
                     "denied-primary-hypernym", "denied-primary-gloss", "usage-label", "verb-form",
-                    "proper-name", "gendered"}
+                    "proper-name", "gendered", "unfamiliar"}
         for line in entries("filters/rule-waivers.txt"):
             word, ids = line.split()
             self.assertLessEqual(set(ids.split(",")), waivable, line)

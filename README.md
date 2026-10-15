@@ -14,7 +14,7 @@ harmless but `big sister` is not, so this list contains neither.
 
 | File | Words | Bits/word | Use |
 |---|---|---|---|
-| [`wordlists/safe-words.txt`](wordlists/safe-words.txt) | 2,634 | 11.4 | Software generators (`secrets.choice`) |
+| [`wordlists/safe-words.txt`](wordlists/safe-words.txt) | 1,763 | 10.8 | Software generators (`secrets.choice`) |
 | [`wordlists/safe-diceware-1296.txt`](wordlists/safe-diceware-1296.txt) | 1,296 | 10.3 | Physical dice: roll 4 dice per word |
 
 The dice list holds the 1,296 most common words of the full list.
@@ -24,7 +24,7 @@ so use more words:
 
 | Passphrase | Strength |
 |---|---|
-| 7 words from the full list | ~80 bits |
+| 8 words from the full list | ~86 bits |
 | 8 words from the dice list | ~83 bits |
 | 6 words from the EFF large list | ~78 bits (for comparison) |
 
@@ -33,7 +33,7 @@ together can form other words across the join; "therapist" reads as "the
 rapist". The build drops the most severe of these joins, but a separator
 avoids all of them.
 
-Example: `canyon-tulip-lantern-glacier-otter-saucer-meadow`
+Example: `canyon-tulip-lantern-glacier-otter-saucer-meadow-kettle`
 
 ## How words are chosen
 
@@ -47,7 +47,10 @@ Full details and measurements are in
    Categories whose words often describe people or bodies are excluded:
    clothing, hoofed and farm animals, primates, tools, meat and baked goods.
    Verbs, adverbs and adjectives are excluded. "Common" means **SCOWL**
-   lists the word at size 50 or below (medium dictionary).
+   lists the word at size 40 or below, or at size 50 with evidence that
+   people know it: SCOWL's ESL-learner or UK-frequency sources, or WordNet's
+   sense-tagged corpus. This keeps `lantern` and `parsnip` but drops
+   dictionary-only words like `bast` and `percale`.
 2. **Safety rules.** A word is rejected if any meaning can describe a person
    or body, is labelled obscene, slur or disparaging, or is about sex, drugs,
    alcohol, violence, death, religion, disease or a country. It is also
@@ -93,9 +96,8 @@ python -m unittest discover tests
 ```
 
 All inputs are pinned to a commit and verified by SHA-256, so a rebuild
-reproduces the committed lists exactly. `--max-scowl-size` trades
-familiarity for size: size 60 adds about 700 mostly obscure words for
-+0.3 bits/word.
+reproduces the committed lists exactly. The size/familiarity trade-off is
+measured in [`docs/selection-model.md`](docs/selection-model.md#commonness-and-size).
 
 ## AI use in this project (explicit policy)
 

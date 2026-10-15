@@ -238,6 +238,7 @@ purebred    # insult: racial-purity rhetoric
 reptilian   # insult: conspiracy-theory slur
 rubbish     # insult: also said of people
 shanty      # insult: poverty pejorative ("shanty Irish")
+schlock     # insult: junk (slang)
 shlock      # insult: junk (slang)
 slum        # insult: poverty pejorative
 snowflake   # insult: political insult
