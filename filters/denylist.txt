@@ -1,0 +1,297 @@
+# Manual denylist: words the automated rules accept but that should not be in
+# the safe list. Format: word  # category: reason
+#
+# Proposed by AI during review of the generated list (see README "AI use")
+# and approved by the maintainer in October 2026; new entries need human
+# review. To restore a word, delete its line.
+# Every entry must be a build candidate (a WordNet noun SCOWL lists as
+# common); tests/test_outputs.py checks this.
+
+# --- Death, disasters, illness, waste ----------------------------------------
+abattoir    # death-disaster: slaughterhouse
+abyss       # death-disaster: evokes hell / the void
+aftermath   # death-disaster: aftermath of a disaster
+ambulance   # death-disaster: medical emergency
+antacid     # illness: digestion
+asbestos    # death-disaster: carcinogen
+asylum      # contentious: psychiatric asylum, refugee politics
+bacteria    # illness: germs, infection
+bacterium   # illness: germs, infection
+butchery    # death-disaster: slaughter
+carbuncle   # illness: skin abscess
+catacomb    # death-disaster: burial place
+catheter    # illness: invasive medical device
+cenotaph    # death-disaster: war memorial, empty tomb
+cesspool    # negative: sewage; also an insult
+cortisone   # illness: drug
+cyanide     # death-disaster: poison
+cyclone     # death-disaster: natural disaster
+defoliant   # death-disaster: Agent Orange
+demise      # death-disaster: death
+digitalis   # death-disaster: poison, heart drug
+effluent    # negative: waste
+embolism    # illness: medical emergency
+fallout     # death-disaster: nuclear fallout
+firestorm   # death-disaster: natural disaster
+flood       # death-disaster: natural disaster
+fungicide   # death-disaster: poison
+gallstone   # illness
+hazmat      # death-disaster: hazardous material
+headstone   # death-disaster: grave marker
+herbicide   # death-disaster: poison (Agent Orange)
+hospice     # death-disaster: end-of-life care
+hospital    # illness
+hurricane   # death-disaster: natural disaster
+infirmary   # illness
+mammogram   # illness: cancer screening
+manure      # negative: waste
+monoxide    # death-disaster: poison gas
+pollutant   # negative: pollution
+polonium    # death-disaster: notorious poisonings
+senna       # illness: laxative
+sewage      # negative: waste
+sewerage    # negative: waste
+shipwreck   # death-disaster
+sickbed     # illness
+stent       # illness: medical implant
+strep       # illness
+tombstone   # death-disaster: grave marker
+twister     # death-disaster: tornado
+typhoon     # death-disaster: natural disaster
+urn         # death-disaster: funeral urn
+vaccine     # contentious: politically charged medical topic
+virus       # illness
+wart        # illness: skin growth
+wreckage    # death-disaster
+
+# --- Reproduction and body ---------------------------------------------------
+embryo      # reproduction: abortion debate
+fertility   # reproduction
+fetus       # reproduction: abortion debate
+gestation   # reproduction: pregnancy
+period      # reproduction: also means menstruation
+trimester   # reproduction: pregnancy
+
+# --- Religion, occult, sacred objects ----------------------------------------
+afterlife   # religion
+ark         # religion: Noah's ark, Ark of the Covenant
+baptistry   # religion
+brimstone   # religion: hellfire
+chalice     # religion: communion cup
+creche      # religion: nativity scene
+crucifix    # religion
+diocese     # religion
+headdress   # culture: sacred Native American regalia
+heaven      # religion
+lamasery    # religion: monastery
+manger      # religion: nativity
+manna       # religion: biblical
+manse       # religion: minister's house
+matins      # religion: morning prayer
+mecca       # religion: Islamic holy city
+minaret     # religion: mosque tower
+nunnery     # religion: convent; also old slang for brothel
+paradise    # religion
+pyx         # religion: vessel for the Eucharist
+rebirth     # religion: reincarnation, being born again
+rood        # religion: crucifix
+tarot       # religion: occult, fortune telling
+voodoo      # religion: often used dismissively about a religion
+zodiac      # religion: astrology; also a serial killer's alias
+
+# --- Sexual slang, innuendo, revealing clothing ------------------------------
+armhole     # sexual: "-hole" compound
+bathhouse   # sexual: gay bathhouse connotation
+bathroom    # body: toilet
+bikini      # body: revealing clothing
+bloomer     # sexual: "bloomers" underwear
+bootie      # sexual: slang for buttocks ("booty")
+boudoir     # sexual: bedroom connotation
+bulge       # sexual: slang
+caboose     # sexual: slang for buttocks
+cockade     # sexual: "cock"
+cockatoo    # sexual: "cock" (petname removed it for professional settings)
+cockerel    # sexual: "cock"
+cockle      # sexual: "cock"
+cockpit     # sexual: "cock"
+cougar      # sexual: slang for older women
+coupling    # sexual: also means mating
+crotchet    # sexual: reads as "crotch"
+crumpet     # sexual: slang objectifying women
+dicky       # sexual: slang for penis
+diet        # body: weight and body image
+doggy       # sexual: "doggy style"
+dolly       # sexual: slang objectifying women ("dolly bird")
+duff        # sexual: slang for buttocks
+eggplant    # sexual: emoji innuendo
+gerbil      # sexual: notorious urban legend
+hind        # sexual: gendered (female deer); also "rear end"
+jug         # sexual: slang for breasts
+junk        # sexual: slang for genitals; also heroin
+knob        # sexual: slang for penis
+lovebird    # sexual: romantic couple
+lube        # sexual: lubricant
+lubricant   # sexual
+manhole     # sexual: "-hole" compound
+mound       # sexual: "venus mound"
+negligee    # sexual: lingerie
+pantyhose   # sexual: undergarment
+peacock     # sexual: "cock" (petname removed it for professional settings)
+penthouse   # sexual: adult magazine
+pheromone   # sexual: sexual attraction
+philter     # sexual: love potion
+pit         # sexual: armpit; "the pits"
+rag         # sexual: menstruation slang ("on the rag")
+redbreast   # sexual: "breast"
+steamer     # sexual: slang ("Cleveland steamer")
+swimsuit    # body: revealing clothing
+tinder      # sexual: dating app
+titmouse    # sexual: "tit"
+udder       # body: animal teat; slang for breasts
+webcam      # sexual: adult webcam connotation
+woodcock    # sexual: "cock" (petname removed it for professional settings)
+
+# --- Drugs, alcohol, tobacco, gambling ---------------------------------------
+ashtray     # drugs-alcohol: tobacco
+blackjack   # gambling; also a cosh
+brewery     # drugs-alcohol
+cabaret     # drugs-alcohol: nightclub
+detox       # drugs-alcohol: addiction treatment
+dive        # drugs-alcohol: seedy bar; also a verb
+edible      # drugs-alcohol: cannabis edibles
+hookah      # drugs-alcohol: smoking
+hypo        # drugs-alcohol: hypodermic needle
+jag         # drugs-alcohol: drinking spree
+nightclub   # drugs-alcohol
+poker       # gambling
+pub         # drugs-alcohol: bar
+snifter     # drugs-alcohol: brandy glass
+snuffbox    # drugs-alcohol: tobacco
+speakeasy   # drugs-alcohol: illegal bar
+stein       # drugs-alcohol: beer mug; also a common Jewish surname
+syringe     # drugs-alcohol: needles
+tankard     # drugs-alcohol: beer mug
+vaporizer   # drugs-alcohol: vaping, cannabis
+wineglass   # drugs-alcohol
+winery      # drugs-alcohol
+
+# --- Violence, weapons, military, captivity ----------------------------------
+axe         # violence
+blindfold   # violence: captivity
+blowgun     # violence: weapon
+bullring    # violence: bullfighting
+bunker      # violence: war
+cage        # violence: captivity
+cannon      # violence: weapon
+cleaver     # violence
+curfew      # violence: enforced restriction
+dungeon     # violence: imprisonment, torture
+flail       # violence: weapon
+foxhole     # violence: military
+fuze        # violence: bomb fuse
+gunboat     # violence: military
+handcuff    # violence: restraint
+hanging     # violence: execution
+holster     # violence: gun holster
+horsewhip   # violence
+jackknife   # violence: knife
+knife       # violence: weapon
+muzzle      # violence: gun muzzle; restraint
+napalm      # violence: incendiary weapon
+penknife    # violence: knife
+plutonium   # violence: nuclear weapons
+polygraph   # violence: interrogation
+popgun      # violence: gun
+probation   # violence: criminal justice
+razor       # violence: blade, self-harm
+scabbard    # violence: sword sheath
+silencer    # violence: gun silencer
+throttle    # violence: also means strangle
+trigger     # violence: gun trigger; "triggered"
+
+# --- Insults, slurs, poverty, idioms aimed at people -------------------------
+baboon      # insult: used as a racist insult
+backwoods   # insult: pejorative for rural areas
+bedlam      # insult: mental-illness pejorative
+boondocks   # insult: pejorative for rural areas
+chimp       # insult: used as a racist insult
+cootie      # insult: lice, playground insult
+crock       # insult: "crock of ..." (nonsense)
+deadwood    # insult: useless staff (workplace idiom)
+dipstick    # insult: idiot
+flophouse   # insult: poverty pejorative
+fruit       # insult: homophobic slur
+garbage     # insult: also said of people
+gaslight    # insult: psychological abuse ("gaslighting")
+ghetto      # insult: racialized pejorative
+ginger      # insult: used to bully redheads
+goober      # insult: idiot
+hookworm    # insult: parasite
+impurity    # insult: racial-purity rhetoric
+jigger      # insult: close to a racial slur
+madhouse    # insult: mental-illness pejorative
+maggot      # insult: dehumanizing
+mankind     # people: refers to humanity; gendered
+mutt        # insult: slur for mixed-race people
+polecat     # insult
+poorhouse   # insult: poverty pejorative
+purebred    # insult: racial-purity rhetoric
+reptilian   # insult: conspiracy-theory slur
+rubbish     # insult: also said of people
+shanty      # insult: poverty pejorative ("shanty Irish")
+schlock     # insult: junk (slang)
+shlock      # insult: junk (slang)
+slum        # insult: poverty pejorative
+snowflake   # insult: political insult
+spade       # insult: racial slur
+spittoon    # insult: spit
+sweatshop   # insult: exploitation
+swine       # insult
+tapeworm    # insult: parasite
+tenement    # insult: poverty pejorative
+termite     # insult: petname removed it after bad user experiences
+vitriol     # insult: hateful speech
+workhouse   # insult: poverty pejorative
+
+# --- Brands ------------------------------------------------------------------
+jeep        # brand
+jello       # brand
+
+# --- Variant spellings -------------------------------------------------------
+bowlder     # variant spelling of boulder
+cantaloup   # variant spelling of cantaloupe
+catsup      # variant spelling of ketchup
+chammy      # variant spelling of chamois
+egis        # variant spelling of aegis
+fondu       # variant spelling of fondue
+hommos      # variant spelling of hummus
+lichee      # variant spelling of lychee
+mesquit     # variant spelling of mesquite
+morn        # archaic form of morning (keeps 'morning' in the stem group)
+papaw       # variant spelling of pawpaw
+pilaw       # variant spelling of pilaf
+ricksha     # variant spelling of rickshaw
+scollop     # variant spelling of scallop
+sirup       # variant spelling of syrup
+tunny       # British word for tuna
+vizor       # variant spelling of visor
+
+# --- Reads as a different part of speech -------------------------------------
+absorbent   # reads as an adjective
+bedder      # unfamiliar; reads as "bed"
+caustic     # reads as an adjective
+drier       # reads as a comparative adjective
+floppy      # reads as an adjective
+may         # reads as a modal verb
+midst       # reads as a preposition
+mine        # reads as a pronoun; also an explosive mine
+must        # reads as a modal verb
+requisite   # reads as an adjective
+roulette    # gambling; "Russian roulette"
+stainless   # reads as an adjective
+sulky       # reads as an adjective
+thinner     # reads as a comparative adjective
+till        # reads as a preposition or verb
+tubeless    # reads as an adjective
+vibes       # reads as slang
+while       # reads as a conjunction

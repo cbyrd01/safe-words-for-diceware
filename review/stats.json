@@ -1,0 +1,100 @@
+{
+  "candidates": 14425,
+  "excluded_by_first_failing_rule": {
+    "category": 8434,
+    "pos": 1947,
+    "unfamiliar": 970,
+    "manual-denylist": 268,
+    "denied-category": 234,
+    "verb-form": 213,
+    "denied-hypernym": 117,
+    "duplicate": 83,
+    "profanity-list": 81,
+    "denied-primary-gloss": 71,
+    "denied-primary-hypernym": 62,
+    "denied-gloss": 41,
+    "not-in-wordnet": 33,
+    "proper-name": 32,
+    "combination": 32,
+    "gendered": 21,
+    "usage-label": 20,
+    "scowl-usage": 3
+  },
+  "combination_conflicts": 436,
+  "combination_drops": 32,
+  "safe_words": 1763,
+  "safe_words_bits_per_word": 10.78,
+  "dice_list_words": 1296,
+  "dice_list_bits_per_word": 10.34,
+  "safe_words_by_category": {
+    "materials": 240,
+    "structures": 204,
+    "devices": 174,
+    "food and other substances": 164,
+    "animals": 128,
+    "plants": 121,
+    "vehicles": 73,
+    "shapes": 64,
+    "containers": 59,
+    "landforms": 52,
+    "roads and passages": 46,
+    "fabrics": 41,
+    "plant parts": 39,
+    "coverings": 38,
+    "decorations": 36,
+    "equipment": 36,
+    "physical phenomena": 30,
+    "weather": 30,
+    "land areas": 24,
+    "times of day": 20,
+    "furniture": 20,
+    "facilities": 19,
+    "water": 18,
+    "goods": 18,
+    "kitchenware": 14,
+    "places": 13,
+    "land": 10,
+    "calendar": 8,
+    "rocks": 5,
+    "tableware": 5,
+    "seasons": 4,
+    "fungi": 4,
+    "sky": 3,
+    "toys": 3
+  },
+  "max_scowl_size": 50,
+  "familiarity": {
+    "always_familiar_up_to_scowl_size": 40,
+    "evidence_tags": [
+      "3esl",
+      "ukfreq"
+    ],
+    "or_wordnet_tagged_corpus": true
+  },
+  "inputs": [
+    {
+      "name": "Open English WordNet 2025+ (NLTK format)",
+      "url": "https://raw.githubusercontent.com/nltk/nltk_data/550b6625bcef1f2abff2ff770a5a0d272c9c6b2a/packages/corpora/english_wordnet.zip",
+      "sha256": "d5441a8972de29d18559068eb2c1004af864b1921adb5cb0958f7b9e4dacc802",
+      "license": "CC BY 4.0 and the Princeton WordNet License"
+    },
+    {
+      "name": "SCOWL / English Speller Database",
+      "url": "https://raw.githubusercontent.com/en-wl/wordlist/1e5b7d3a72f47a71da5d28686c1dd4b397178485/data/scowl-pre.txt",
+      "sha256": "a5fe3f11682a6ab9d31f2ea2a185833b1a01be7af83409c671bd0756a870f6c7",
+      "license": "SCOWL copyright notice (permissive)"
+    },
+    {
+      "name": "List of Dirty, Naughty, Obscene, and Otherwise Bad Words (en)",
+      "url": "https://raw.githubusercontent.com/LDNOOBW/List-of-Dirty-Naughty-Obscene-and-Otherwise-Bad-Words/5faf2ba42d7b1c0977169ec3611df25a3c08eb13/en",
+      "sha256": "af851ecef1d5f212caba17339b12ac39cc2fef7d78c74876f67237644fcee8bd",
+      "license": "CC BY 4.0"
+    },
+    {
+      "name": "dsojevic/profanity-list (en)",
+      "url": "https://raw.githubusercontent.com/dsojevic/profanity-list/c27924319aa9bd6f917e3782b4f4b6604a50b652/en.json",
+      "sha256": "bcf8bfc09dd3f7480972cb041a4cba291a6ff16a6fbf29022d5d679e3c39502c",
+      "license": "MIT"
+    }
+  ]
+}

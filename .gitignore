@@ -216,3 +216,6 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Pinned downloads used by scripts/build_safe_wordlist.py
+build/

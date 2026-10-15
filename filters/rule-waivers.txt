@@ -1,0 +1,34 @@
+# Waive an automated rule for one word when the rule fired on an obscure or
+# purely technical sense. Format: word rule-id[,rule-id]  # justification
+#
+# Only these rules can be waived: pos, category, denied-category,
+# denied-hypernym, denied-gloss, denied-primary-hypernym,
+# denied-primary-gloss, usage-label, verb-form, proper-name, gendered,
+# unfamiliar (to restore a familiar word the commonness signals miss).
+# Profanity-list hits, the manual denylist and combination drops can never be
+# waived. Keep this list short: every waiver is a judgement call that needs
+# human review.
+
+water usage-label,denied-hypernym  # only via the "urine" synset; the main sense is the liquid
+
+# Sense rules that fired on wording, not meaning
+cattle denied-gloss                 # gloss says "regardless of sex or age"
+spider denied-primary-gloss         # gloss mentions its "poison fangs"
+
+# Harmless person senses
+angle denied-category               # 'Angle', a historical Germanic people
+brick denied-category               # "a good fellow; helpful and trustworthy"
+dove denied-category                # "someone who prefers negotiations to armed conflict"
+gravity denied-category             # noun.feeling sense "solemnity"
+machine denied-category             # "an efficient person"
+material denied-category            # "a person judged suitable for employment"
+
+# Technical anatomy senses
+bulb denied-category                # anatomical "rounded dilation"; old term for the medulla
+cement denied-category              # dental "cementum"
+fiber denied-category               # muscle/nerve fiber
+lens denied-category                # lens of the eye
+pulp denied-category                # tooth pulp
+region denied-category              # anatomical region
+system denied-category              # organ system
+zone denied-category                # anatomical "encircling structure"

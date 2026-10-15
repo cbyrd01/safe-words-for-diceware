@@ -1,0 +1,40 @@
+# Known problematic word combinations not covered by the profanity lists or
+# WordNet. If every word of a phrase is in the safe list, the build drops one
+# of them. Format: word word  # reason
+#
+# Proposed by AI (see README "AI use") and approved by the maintainer in
+# October 2026; new entries need human review.
+
+big sister     # the project's motivating example: surveillance connotation
+big brother    # surveillance, authoritarianism
+golden shower  # sexual
+glory hole     # sexual
+happy ending   # sexual
+cherry popper  # sexual
+pink taco      # sexual
+camel toe      # sexual
+hot dog        # sexual innuendo
+jungle bunny   # racial slur
+porch monkey   # racial slur
+cotton picker  # racial slur
+tar baby       # racial slur
+paddy wagon    # ethnic slur
+gypsy cab      # ethnic slur
+indian giver   # ethnic slur
+peanut gallery # racially loaded origin
+master slave   # slavery terminology
+white power    # white supremacist slogan
+white pride    # white supremacist slogan
+black magic    # racially loaded
+black market   # crime
+dirty bomb     # weapon
+gas chamber    # genocide
+death camp     # genocide
+final solution # genocide
+iron cross     # nazi symbol
+crystal night  # Kristallnacht pogrom
+cold turkey    # drug withdrawal
+crack baby     # drugs, demeaning
+magic mushroom # drugs
+baby boomer    # generational insult
+sugar daddy    # sexual / transactional
