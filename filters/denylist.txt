@@ -1,0 +1,180 @@
+# Manual denylist: words the automated rules accept but that should not be in
+# the safe list. Format: word  # category: reason
+#
+# Proposed by AI during review of the generated list (see README "AI use");
+# every entry needs human review. To restore a word, delete its line.
+
+# --- Death, disasters, illness ---------------------------------------------
+abyss       # death-disaster: evokes hell / the void
+aftermath   # death-disaster: aftermath of a disaster
+ambulance   # death-disaster: medical emergency
+asbestos    # death-disaster: carcinogen
+bacteria    # illness: germs, infection
+bacterium   # illness: germs, infection
+catacomb    # death-disaster: burial place
+catheter    # illness: invasive medical device
+cesspool    # negative: sewage; also an insult
+cyanide     # death-disaster: poison
+demise      # death-disaster: death
+embolism    # illness: medical emergency
+flood       # death-disaster: natural disaster
+gallstone   # illness
+headstone   # death-disaster: grave marker
+herbicide   # death-disaster: poison (Agent Orange)
+hospice     # death-disaster: end-of-life care
+hospital    # illness
+hurricane   # death-disaster: natural disaster
+infirmary   # illness
+mammogram   # illness: cancer screening
+monoxide    # death-disaster: poison gas
+plutonium   # violence: nuclear weapons
+sewage      # negative: waste
+strep       # illness
+typhoon     # death-disaster: natural disaster
+urn         # death-disaster: funeral urn
+vaccine     # contentious: politically charged medical topic
+virus       # illness
+wreckage    # death-disaster
+
+# --- Reproduction and body ---------------------------------------------------
+diet        # body: weight and body image
+embryo      # reproduction: abortion debate
+fertility   # reproduction
+fetus       # reproduction: abortion debate
+gestation   # reproduction: pregnancy
+period      # reproduction: also means menstruation
+trimester   # reproduction: pregnancy
+
+# --- Religion, occult, sacred dress -----------------------------------------
+afterlife   # religion
+ark         # religion: Noah's ark, Ark of the Covenant
+chalice     # religion: communion cup
+christmas   # religion: religious holiday
+diocese     # religion
+eden        # religion: Garden of Eden
+headdress   # culture: sacred Native American regalia
+headscarf   # religion: religious dress
+heaven      # religion
+hexagram    # religion: Star of David; I Ching
+manger      # religion: nativity
+mecca       # religion: Islamic holy city
+medina      # religion: Islamic holy city
+paradise    # religion
+pentagram   # religion: occult symbol
+rebirth     # religion: reincarnation, being born again
+tarot       # religion: occult, fortune telling
+voodoo      # religion: often used dismissively about a religion
+zodiac      # religion: astrology; also a serial killer's alias
+
+# --- Sexual slang and revealing clothing -------------------------------------
+armhole     # sexual: "-hole" compound
+bathroom    # body: toilet
+bikini      # body: revealing clothing
+bootie      # sexual: slang for buttocks ("booty")
+bulge       # sexual: slang
+caboose     # sexual: slang for buttocks
+cougar      # sexual: slang for older women
+coupling    # sexual: also means mating
+crumpet     # sexual: slang objectifying women
+dolly       # sexual: slang objectifying women ("dolly bird")
+duff        # sexual: slang for buttocks
+gerbil      # sexual: notorious urban legend
+jug         # sexual: slang for breasts
+junk        # sexual: slang for genitals; also heroin
+knob        # sexual: slang for penis
+lubricant   # sexual
+manhole     # sexual: "-hole" compound
+negligee    # sexual: lingerie
+pantyhose   # sexual: undergarment
+penthouse   # sexual: adult magazine
+swimsuit    # body: revealing clothing
+swimwear    # body: revealing clothing
+tinder      # sexual: dating app
+udder       # body: animal teat; slang for breasts
+webcam      # sexual: adult webcam connotation
+
+# --- Drugs, alcohol, gambling ------------------------------------------------
+brewery     # drugs-alcohol
+cabaret     # drugs-alcohol: nightclub
+detox       # drugs-alcohol: addiction treatment
+edible      # drugs-alcohol: cannabis edibles
+nightclub   # drugs-alcohol
+poker       # gambling
+roulette    # gambling; "Russian roulette"
+stein       # drugs-alcohol: beer mug; also a common Jewish surname
+syringe     # drugs-alcohol: needles
+vaporizer   # drugs-alcohol: vaping, cannabis
+
+# --- Violence, weapons, crime, captivity -------------------------------------
+asylum      # contentious: psychiatric asylum, refugee politics
+axe         # violence
+bullring    # violence: bullfighting
+bunker      # violence: war
+cage        # violence: captivity
+cannon      # violence: weapon
+cleaver     # violence
+curfew      # violence: enforced restriction
+dungeon     # violence: imprisonment, torture
+flail       # violence: weapon
+handcuff    # violence: restraint
+hanging     # violence: execution
+jackknife   # violence: knife
+knife       # violence: weapon
+muzzle      # violence: gun muzzle; restraint
+penknife    # violence: knife
+polygraph   # violence: interrogation
+probation   # violence: criminal justice
+razor       # violence: blade, self-harm
+silencer    # violence: gun silencer
+throttle    # violence: also means strangle
+trigger     # violence: gun trigger; "triggered"
+
+# --- Insults and slurs (secondary meanings aimed at people) ------------------
+baboon      # insult: used as a racist insult
+boondocks   # insult: pejorative for rural areas
+chimp       # insult: used as a racist insult
+crock       # insult: "crock of ..." (nonsense)
+fruit       # insult: homophobic slur
+garbage     # insult: also said of people
+ghetto      # insult: racialized pejorative
+ginger      # insult: used to bully redheads
+impurity    # insult: racial-purity rhetoric
+lapdog      # insult: sycophant
+maggot      # insult: dehumanizing
+mutt        # insult: slur for mixed-race people
+pureblood   # insult: racial-purity rhetoric
+purebred    # insult: racial-purity rhetoric
+reptilian   # insult: conspiracy-theory slur
+rubbish     # insult: also said of people
+shanty      # insult: poverty pejorative ("shanty Irish")
+slum        # insult: poverty pejorative
+snowflake   # insult: political insult
+spade       # insult: racial slur
+swine       # insult
+
+# --- People, brands ----------------------------------------------------------
+ipad        # brand
+iphone      # brand
+jeep        # brand
+lego        # brand
+mankind     # people: refers to humanity; gendered
+plexiglas   # brand
+popsicle    # brand
+tabasco     # brand
+xerox       # brand
+
+# --- Reads as a different part of speech ------------------------------------
+drier       # reads as a comparative adjective
+drinkable   # reads as an adjective
+eureka      # reads as an interjection
+may         # reads as a modal verb
+midst       # reads as a preposition
+mine        # reads as a pronoun; also an explosive mine
+must        # reads as a modal verb
+pave        # reads as a verb
+requisite   # reads as an adjective
+stainless   # reads as an adjective
+thinner     # reads as a comparative adjective
+till        # reads as a preposition or verb
+tubeless    # reads as an adjective
+while       # reads as a conjunction

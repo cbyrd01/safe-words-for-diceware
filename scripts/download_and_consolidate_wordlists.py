@@ -23,22 +23,23 @@ class Source:
     local_filename: str
 
 
+# URLs are pinned to commits so a rebuild sees exactly the reviewed inputs.
 SOURCES: tuple[Source, ...] = (
     Source(
         name="asian_diceware_7776_en",
-        url="https://raw.githubusercontent.com/anoni-net/asian-diceware/main/output/asian_diceware_7776.txt",
+        url="https://raw.githubusercontent.com/anoni-net/asian-diceware/946e0ef4b4dbf814f862a982f64eaddff1ff3dce/output/asian_diceware_7776.txt",
         parser="plain",
         local_filename="asian_diceware_7776.txt",
     ),
     Source(
         name="eff_large_en",
-        url="https://raw.githubusercontent.com/ulif/diceware/master/diceware/wordlists/wordlist_en_eff.txt",
+        url="https://raw.githubusercontent.com/ulif/diceware/89534ea7b2c2d090e76307d55497a27ff90cc3d9/diceware/wordlists/wordlist_en_eff.txt",
         parser="eff_tab",
         local_filename="eff_large_wordlist.txt",
     ),
     Source(
         name="bip39_english",
-        url="https://raw.githubusercontent.com/bitcoin/bips/master/bip-0039/english.txt",
+        url="https://raw.githubusercontent.com/bitcoin/bips/927b6de9915c9262615a6399de51b200f81e5aa4/bip-0039/english.txt",
         parser="plain",
         local_filename="bip39_english.txt",
     ),
@@ -92,14 +93,20 @@ def stem_word(word: str) -> str:
     return stem
 
 
+def representative_key(word: str, stem: str) -> tuple[bool, int, str]:
+    """Sort key for choosing a stem's representative: the base form wins,
+    then the shortest variant, then alphabetical order."""
+    return (word != stem, len(word), word)
+
+
 def unique_after_stemming(words: list[str]) -> dict[str, str]:
-    """Map stem -> representative word (alphabetically smallest variant)."""
+    """Map stem -> representative word (see ``representative_key``)."""
     stem_to_word: dict[str, str] = {}
 
     for word in words:
         stem = stem_word(word)
         current = stem_to_word.get(stem)
-        if current is None or word < current:
+        if current is None or representative_key(word, stem) < representative_key(current, stem):
             stem_to_word[stem] = word
 
     return stem_to_word
@@ -177,7 +184,7 @@ def main() -> None:
 
         for stem, word in stem_to_word.items():
             current = consolidated_stem_to_word.get(stem)
-            if current is None or word < current:
+            if current is None or representative_key(word, stem) < representative_key(current, stem):
                 consolidated_stem_to_word[stem] = word
 
         per_source_unique_path = output_dir / "by-source" / f"{source.name}.txt"

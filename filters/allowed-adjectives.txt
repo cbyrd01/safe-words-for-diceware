@@ -1,0 +1,130 @@
+# Adjectives allowed into the list. The positive model admits nouns only;
+# adjectives are added from this curated set. They still have to pass every
+# automated safety rule (a listed word with an offensive sense is rejected).
+#
+# Selection rule: neutral or positive words about weather, light, nature,
+# texture, shape, sound or technology, plus a few friendly traits. Excluded
+# on purpose: size (big, huge, tiny), age (old, young), temperature words with
+# sexual slang (hot), body/appearance words (curly, furry, lacy), colors used
+# for skin or ethnicity (black, white, brown, yellow, red, grey), and anything
+# judging intelligence, morality or worth.
+#
+# Proposed by AI (see README "AI use"); needs human review.
+
+# Weather, sky, light
+balmy
+breezy
+drizzly
+frosty
+hazy
+icy
+luminous
+misty
+moonlit
+radiant
+rainy
+snowy
+starlit
+starry
+sunny
+
+# Nature and places
+aquatic
+coastal
+earthen
+floral
+fragrant
+mossy
+nautical
+pebbly
+rocky
+sandy
+scenic
+stony
+tidal
+tropical
+
+# Space
+celestial
+cosmic
+galactic
+lunar
+polar
+solar
+stellar
+
+# Texture, shape, finish
+compact
+crisp
+fluffy
+fuzzy
+oval
+shiny
+sleek
+smooth
+spherical
+sturdy
+
+# Color
+crimson
+lavender
+mauve
+pastel
+purple
+silver
+
+# Sound and motion
+brisk
+melodic
+nimble
+quiet
+rapid
+silent
+swift
+zippy
+
+# Technology
+digital
+electric
+kinetic
+magnetic
+modular
+portable
+sonic
+thermal
+
+# Mood and character
+calm
+cheerful
+festive
+gentle
+gleeful
+grateful
+happy
+helpful
+honest
+jolly
+jovial
+joyous
+lively
+loyal
+lucky
+magical
+majestic
+marvelous
+merry
+nifty
+playful
+pleasant
+polite
+serene
+snazzy
+splendid
+spry
+tranquil
+upbeat
+vibrant
+vivid
+whimsical
+wholesome
+witty

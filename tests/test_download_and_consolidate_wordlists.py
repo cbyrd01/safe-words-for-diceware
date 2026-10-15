@@ -25,10 +25,15 @@ class ConsolidationHelpersTest(unittest.TestCase):
         self.assertEqual(stem_word("cats"), "cat")
         self.assertEqual(stem_word("glass"), "glass")
 
-    def test_unique_after_stemming_uses_representative_word(self) -> None:
+    def test_unique_after_stemming_prefers_base_form(self) -> None:
         stem_map = unique_after_stemming(["berries", "berry", "cats", "cat"])
-        self.assertEqual(stem_map["berry"], "berries")
+        self.assertEqual(stem_map["berry"], "berry")
         self.assertEqual(stem_map["cat"], "cat")
+
+    def test_unique_after_stemming_keeps_plural_when_no_base_form(self) -> None:
+        stem_map = unique_after_stemming(["berries", "dogs"])
+        self.assertEqual(stem_map["berry"], "berries")
+        self.assertEqual(stem_map["dog"], "dogs")
 
 
 if __name__ == "__main__":
