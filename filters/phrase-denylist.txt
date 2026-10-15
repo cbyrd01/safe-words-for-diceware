@@ -2,7 +2,8 @@
 # WordNet. If every word of a phrase is in the safe list, the build drops one
 # of them. Format: word word  # reason
 #
-# Proposed by AI (see README "AI use"); needs human review.
+# Proposed by AI (see README "AI use") and approved by the maintainer in
+# October 2026; new entries need human review.
 
 big sister     # the project's motivating example: surveillance connotation
 big brother    # surveillance, authoritarianism

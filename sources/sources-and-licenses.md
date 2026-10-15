@@ -48,6 +48,8 @@ to be non-commercial.
 
 ## Output license
 
-The generated lists are derived from Open English WordNet (CC BY 4.0) and
-filtered with SCOWL. Anyone redistributing them must carry the notices in
-`ATTRIBUTION.md`. This repository does not yet declare its own license.
+The wordlists, review data, filters and documentation are licensed under
+CC BY 4.0 (`LICENSE-CC-BY-4.0`); the code is MIT (`LICENSE-MIT`). CC BY 4.0
+matches Open English WordNet's license, so the derived lists can be shared
+under the same terms. Anyone redistributing the lists must also carry the
+upstream notices in `ATTRIBUTION.md`.

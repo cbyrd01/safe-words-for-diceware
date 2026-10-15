@@ -1,8 +1,10 @@
 # Attribution and notices
 
-The files in `wordlists/` are derived from Open English WordNet and filtered
-with the English Speller Database (SCOWL). Their notices below must
-accompany any copy of the lists.
+The files in `wordlists/` and `review/` are derived from Open English
+WordNet and filtered with the English Speller Database (SCOWL). Their
+notices below must accompany any copy of those files. This project's own
+licenses are in `LICENSE-CC-BY-4.0` (wordlists, data and documentation) and
+`LICENSE-MIT` (code).
 
 ## Open English WordNet (word source)
 
@@ -10,7 +12,8 @@ Open English WordNet 2025+, https://en-word.net/, by the Open English
 WordNet team, licensed under the Creative Commons Attribution 4.0
 International License (https://creativecommons.org/licenses/by/4.0/). It is
 derived from Princeton WordNet. Changes: this project selects a subset of
-WordNet's nouns; no definitions are redistributed.
+WordNet's nouns. `review/word-decisions.tsv` also reproduces each
+candidate's main WordNet definition, unchanged.
 
 The WordNet database header reads:
 

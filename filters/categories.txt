@@ -9,7 +9,8 @@
 # words in the category carry a person/body/slur/sexual/drug sense, form
 # unsafe compounds, or appear in profanity-list phrases. See
 # docs/selection-model.md for the numbers. Proposed by AI (see README
-# "AI use"); needs human review.
+# "AI use") and approved by the maintainer in October 2026; changes need
+# human review.
 
 # --- Low risk: nature -------------------------------------------------------
 allow plant.n.02                  # plants: trees, flowers, herbs, ferns, grasses

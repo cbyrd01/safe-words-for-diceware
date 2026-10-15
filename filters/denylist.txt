@@ -1,10 +1,11 @@
 # Manual denylist: words the automated rules accept but that should not be in
 # the safe list. Format: word  # category: reason
 #
-# Proposed by AI during review of the generated list (see README "AI use");
-# every entry needs human review. To restore a word, delete its line.
+# Proposed by AI during review of the generated list (see README "AI use")
+# and approved by the maintainer in October 2026; new entries need human
+# review. To restore a word, delete its line.
 # Every entry must be a build candidate (a WordNet noun SCOWL lists as
-# common); tests/test_filters.py checks this.
+# common); tests/test_outputs.py checks this.
 
 # --- Death, disasters, illness, waste ----------------------------------------
 abattoir    # death-disaster: slaughterhouse
