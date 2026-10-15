@@ -1,0 +1,91 @@
+{
+  "candidates": 14425,
+  "excluded_by_first_failing_rule": {
+    "category": 8434,
+    "pos": 1947,
+    "manual-denylist": 267,
+    "denied-category": 234,
+    "verb-form": 213,
+    "duplicate": 160,
+    "denied-hypernym": 117,
+    "profanity-list": 81,
+    "denied-primary-gloss": 71,
+    "denied-primary-hypernym": 62,
+    "denied-gloss": 41,
+    "combination": 35,
+    "not-in-wordnet": 33,
+    "proper-name": 32,
+    "gendered": 21,
+    "usage-label": 20,
+    "scowl-usage": 2
+  },
+  "combination_conflicts": 1011,
+  "combination_drops": 35,
+  "safe_words": 2655,
+  "safe_words_bits_per_word": 11.37,
+  "dice_list_words": 1296,
+  "dice_list_bits_per_word": 10.34,
+  "safe_words_by_category": {
+    "materials": 393,
+    "devices": 268,
+    "structures": 266,
+    "food and other substances": 252,
+    "animals": 236,
+    "plants": 227,
+    "vehicles": 104,
+    "shapes": 85,
+    "containers": 81,
+    "fabrics": 73,
+    "landforms": 71,
+    "plant parts": 68,
+    "roads and passages": 59,
+    "coverings": 58,
+    "decorations": 52,
+    "equipment": 47,
+    "weather": 41,
+    "physical phenomena": 38,
+    "land areas": 30,
+    "furniture": 29,
+    "times of day": 22,
+    "facilities": 21,
+    "water": 21,
+    "goods": 21,
+    "kitchenware": 18,
+    "places": 15,
+    "land": 12,
+    "tableware": 10,
+    "sky": 8,
+    "calendar": 8,
+    "rocks": 7,
+    "fungi": 6,
+    "seasons": 4,
+    "toys": 4
+  },
+  "max_scowl_size": 50,
+  "inputs": [
+    {
+      "name": "Open English WordNet 2025+ (NLTK format)",
+      "url": "https://raw.githubusercontent.com/nltk/nltk_data/550b6625bcef1f2abff2ff770a5a0d272c9c6b2a/packages/corpora/english_wordnet.zip",
+      "sha256": "d5441a8972de29d18559068eb2c1004af864b1921adb5cb0958f7b9e4dacc802",
+      "license": "CC BY 4.0 and the Princeton WordNet License"
+    },
+    {
+      "name": "SCOWL / English Speller Database",
+      "url": "https://raw.githubusercontent.com/en-wl/wordlist/1e5b7d3a72f47a71da5d28686c1dd4b397178485/data/scowl-pre.txt",
+      "sha256": "a5fe3f11682a6ab9d31f2ea2a185833b1a01be7af83409c671bd0756a870f6c7",
+      "license": "SCOWL copyright notice (permissive)"
+    },
+    {
+      "name": "List of Dirty, Naughty, Obscene, and Otherwise Bad Words (en)",
+      "url": "https://raw.githubusercontent.com/LDNOOBW/List-of-Dirty-Naughty-Obscene-and-Otherwise-Bad-Words/5faf2ba42d7b1c0977169ec3611df25a3c08eb13/en",
+      "sha256": "af851ecef1d5f212caba17339b12ac39cc2fef7d78c74876f67237644fcee8bd",
+      "license": "CC BY 4.0"
+    },
+    {
+      "name": "dsojevic/profanity-list (en)",
+      "url": "https://raw.githubusercontent.com/dsojevic/profanity-list/c27924319aa9bd6f917e3782b4f4b6604a50b652/en.json",
+      "sha256": "bcf8bfc09dd3f7480972cb041a4cba291a6ff16a6fbf29022d5d679e3c39502c",
+      "license": "MIT"
+    }
+  ]
+}

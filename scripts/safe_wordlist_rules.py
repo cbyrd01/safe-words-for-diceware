@@ -1,21 +1,21 @@
 """Selection rules for the safe Diceware wordlist.
 
-This module is pure logic: it works on plain ``Sense`` records so it can be
-unit-tested without WordNet installed. ``build_safe_wordlist.py`` adapts
-WordNet (via NLTK) into these records and handles all I/O.
+Pure logic over plain records so it can be unit-tested without WordNet;
+``build_safe_wordlist.py`` adapts WordNet and SCOWL into these records and
+handles all I/O.
 
-The model has three layers, applied in order:
+The model has three layers:
 
-1. **Positive model** - a word is only eligible when WordNet says it is
-   predominantly a noun whose main sense is in a concrete, low-risk lexical
-   category (animals, plants, food, artifacts, natural objects, ...).
-   Verbs and adverbs are never eligible; adjectives only via a curated
-   allowlist.
-2. **Hard denials** - a word is rejected if *any* of its senses is in a
-   category that can describe people or bodies, is labelled obscene / slur /
-   disparaging, or matches high-risk topics (sex, drugs, violence, ...).
-   Some lower-risk topics (weapons, religion, prisons) only reject a word
-   when they are its *main* noun sense.
+1. **Positive model (category gate)** - only nouns are eligible, and the
+   word's main sense must fall under an *allowed* WordNet category such as
+   animals, plants, landforms or furniture (``filters/categories.txt``).
+   The most specific listed category decides, so "clothing" can be denied
+   inside the allowed "covering" branch.
+2. **Hard denials** - a word is rejected if *any* sense can describe a
+   person or body, is labelled obscene / slur / disparaging, or belongs to a
+   high-risk topic (sex, drugs, violence, ...). Lower-risk topics (weapons,
+   religion, prisons) and gendered words are rejected when they are the
+   word's *main* sense.
 3. **Combination screening** - pairs of accepted words that form a known
    problematic phrase or compound are resolved by dropping one word.
 """
@@ -32,38 +32,12 @@ WORD_PATTERN = re.compile(r"^[a-z]+$")
 MIN_WORD_LENGTH = 3
 MAX_WORD_LENGTH = 9
 
-# --- Positive model ---------------------------------------------------------
+# A word with ANY common-noun sense in these lexicographer files is rejected:
+# such words can describe a person or a body, which is where most
+# "big" + "sister" style combinations get their meaning.
+DENIED_NOUN_CATEGORIES = frozenset({"noun.body", "noun.feeling", "noun.motive", "noun.person"})
 
-# WordNet lexicographer files ("lexnames") whose members are concrete and
-# rarely combine into something about people.
-ALLOWED_NOUN_CATEGORIES = frozenset(
-    {
-        "noun.animal",
-        "noun.artifact",
-        "noun.food",
-        "noun.location",
-        "noun.object",
-        "noun.phenomenon",
-        "noun.plant",
-        "noun.shape",
-        "noun.substance",
-        "noun.time",
-    }
-)
-
-# A word with ANY common-noun sense in these categories is rejected: such words
-# can describe a person or a body, which is where most "BIG + SISTER" style
-# combinations get their meaning.
-DENIED_NOUN_CATEGORIES = frozenset(
-    {
-        "noun.body",
-        "noun.feeling",
-        "noun.motive",
-        "noun.person",
-    }
-)
-
-# WordNet usage labels that mark a sense as offensive.
+# WordNet usage labels that reject a word when found on any sense.
 DENIED_USAGE_DOMAINS = frozenset(
     {
         "disparagement.n.01",
@@ -158,6 +132,9 @@ DENIED_GLOSS_PRIMARY_SENSE = re.compile(
     re.IGNORECASE,
 )
 
+# Gendered words ('rooster', 'lioness', 'mare') invite gendered combinations.
+GENDERED_GLOSS_PRIMARY_SENSE = re.compile(r"\b(female|male)\b", re.IGNORECASE)
+
 
 @dataclass(frozen=True)
 class Sense:
@@ -175,6 +152,16 @@ class Sense:
 
 
 @dataclass(frozen=True)
+class CategoryRule:
+    """One line of filters/categories.txt."""
+
+    synset: str
+    allow: bool
+    label: str
+    depth: int  # WordNet depth; the deepest matching rule wins
+
+
+@dataclass(frozen=True)
 class Reason:
     rule: str
     detail: str
@@ -185,9 +172,19 @@ class Overrides:
     """Human-reviewed exceptions loaded from the ``filters/`` directory."""
 
     denylist: Mapping[str, str] = field(default_factory=dict)
-    allowed_adjectives: frozenset = field(default_factory=frozenset)
     # word -> rule ids that are waived for that word
     waivers: Mapping[str, frozenset] = field(default_factory=dict)
+
+
+def stem_word(word: str) -> str:
+    """Conservative English plural stripping, used to match phrase tokens."""
+    if len(word) <= 3:
+        return word
+    if word.endswith("ies") and len(word) > 4:
+        return word[:-3] + "y"
+    if word.endswith("s") and not word.endswith(("ss", "us", "is")):
+        return word[:-1]
+    return word
 
 
 def common_senses(senses: Iterable[Sense]) -> list[Sense]:
@@ -222,16 +219,25 @@ def primary_noun_sense(senses: Sequence[Sense]) -> Optional[Sense]:
     return max(nouns, key=lambda sense: sense.count) if any(s.count for s in nouns) else nouns[0]
 
 
+def match_category(sense: Sense, categories: Mapping[str, CategoryRule]) -> Optional[CategoryRule]:
+    """The most specific category rule covering ``sense``. Deny wins ties;
+    the synset name breaks any remaining tie so labels are deterministic."""
+    matches = [categories[name] for name in sense.ancestors if name in categories]
+    if not matches:
+        return None
+    return max(matches, key=lambda rule: (rule.depth, not rule.allow, rule.synset))
+
+
 def evaluate_word(
     word: str,
     senses: Sequence[Sense],
+    categories: Mapping[str, CategoryRule],
     overrides: Overrides,
     verb_base: Optional[str] = None,
 ) -> list[Reason]:
     """Return every rule the word fails. An empty list means accepted.
 
-    ``verb_base`` is the verb the word inflects, if any ('shook' -> 'shake',
-    'seizing' -> 'seize').
+    ``verb_base`` is the verb the word inflects, if any ('shook' -> 'shake').
     """
     reasons: list[Reason] = []
 
@@ -240,9 +246,7 @@ def evaluate_word(
             reasons.append(Reason(rule, detail))
 
     if not WORD_PATTERN.match(word) or not MIN_WORD_LENGTH <= len(word) <= MAX_WORD_LENGTH:
-        reasons.append(
-            Reason("form", f"must be {MIN_WORD_LENGTH}-{MAX_WORD_LENGTH} letters a-z")
-        )
+        reasons.append(Reason("form", f"must be {MIN_WORD_LENGTH}-{MAX_WORD_LENGTH} letters a-z"))
 
     if word in overrides.denylist:
         reasons.append(Reason("manual-denylist", overrides.denylist[word]))
@@ -262,23 +266,21 @@ def evaluate_word(
             fail("proper-name", f"{sense.synset} is a nationality/proper adjective")
 
     common = common_senses(senses)
-    if not common:
-        reasons.append(Reason("not-in-wordnet", "no common-word WordNet entry to verify"))
+    if not common or all(sense.is_proper for sense in common):
+        reasons.append(Reason("not-in-wordnet", "no lowercase common-noun entry in WordNet"))
         return reasons
 
-    # 1. Positive model
+    # 1. Positive model: nouns only, main sense in an allowed category
     pos = dominant_pos(common)
     primary = primary_noun_sense(common)
-    if word in overrides.allowed_adjectives:
-        if pos not in {"a", "n"}:
-            fail("pos", f"allowlisted adjective but mostly used as '{pos}'")
-    elif pos != "n":
+    if pos != "n" or primary is None:
         fail("pos", f"mostly used as {_POS_NAMES.get(pos, pos)}, not a noun")
-    elif primary is not None and primary.lexname not in ALLOWED_NOUN_CATEGORIES:
-        fail(
-            "category",
-            f"main sense {primary.synset} is {primary.lexname} (not a concrete category)",
-        )
+    else:
+        rule = match_category(primary, categories)
+        if rule is None:
+            fail("category", f"main sense {primary.synset} ({primary.lexname}) is outside the allowed categories")
+        elif not rule.allow:
+            fail("category", f"main sense {primary.synset} is in denied category '{rule.label}'")
 
     # 2. Hard denials over all common senses
     for sense in common:
@@ -294,24 +296,28 @@ def evaluate_word(
         if match:
             fail("denied-gloss", f"{sense.synset} definition mentions '{match.group(0)}'")
 
-    if primary is not None and word not in overrides.allowed_adjectives:
+    if primary is not None:
         flagged_ancestors = primary.ancestors & DENIED_ANCESTORS_PRIMARY_SENSE
         if flagged_ancestors:
-            fail(
-                "denied-primary-hypernym",
-                f"main sense {primary.synset} is a {', '.join(sorted(flagged_ancestors))}",
-            )
+            fail("denied-primary-hypernym", f"main sense {primary.synset} is a {', '.join(sorted(flagged_ancestors))}")
         match = DENIED_GLOSS_PRIMARY_SENSE.search(primary.definition)
         if match:
-            fail(
-                "denied-primary-gloss",
-                f"main sense {primary.synset} definition mentions '{match.group(0)}'",
-            )
+            fail("denied-primary-gloss", f"main sense {primary.synset} definition mentions '{match.group(0)}'")
+        match = GENDERED_GLOSS_PRIMARY_SENSE.search(primary.definition)
+        if match:
+            fail("gendered", f"main sense {primary.synset} definition mentions '{match.group(0)}'")
 
     return _dedupe(reasons)
 
 
 _POS_NAMES = {"v": "a verb", "a": "an adjective", "r": "an adverb", "n": "a noun"}
+
+
+def _dedupe(reasons: Iterable[Reason]) -> list[Reason]:
+    return list(dict.fromkeys(reasons))
+
+
+# --- Duplicates -------------------------------------------------------------
 
 
 def edit_distance(a: str, b: str) -> int:
@@ -333,57 +339,71 @@ def close_spelling(a: str, b: str) -> bool:
     return distance <= 1 or (distance == 2 and min(len(a), len(b)) >= 6)
 
 
+def is_duplicate_pair(a: str, b: str, synsets_of: Mapping[str, frozenset]) -> bool:
+    """Identical WordNet senses ('cougar'/'puma'), or one word's senses are a
+    subset of the other's and the spellings are close ('racoon'/'raccoon').
+    Merely sharing a sense is not enough: 'house' and 'home' share one but
+    mean different things."""
+    mine, theirs = synsets_of[a], synsets_of[b]
+    if not mine or not theirs:
+        return False
+    if mine == theirs:
+        return True
+    return bool(mine & theirs) and (mine <= theirs or theirs <= mine) and close_spelling(a, b)
+
+
+def find_plural_pairs(words: Iterable[str]) -> dict[str, str]:
+    """Plural-looking words whose singular is also present ('stairs' ->
+    'stair'); keeping both invites recall mistakes."""
+    present = set(words)
+    pairs = {}
+    for word in sorted(present):
+        singular = stem_word(word)
+        if singular != word and singular in present:
+            pairs[word] = singular
+    return pairs
+
+
 def find_duplicates(
     words: Iterable[str],
     synsets_of: Mapping[str, frozenset],
-    drop_priority: Callable[[str], tuple],
+    keep_priority: Callable[[str, frozenset], tuple],
 ) -> dict[str, str]:
-    """Find spelling variants and exact synonyms; return dropped -> kept.
+    """Resolve spelling variants and exact synonyms; return dropped -> kept.
 
-    Two words are duplicates when they have identical WordNet senses
-    ('cougar'/'puma'), or when one's senses are a subset of the other's and
-    the spellings are close ('racoon'/'raccoon', 'sulphate'/'sulfate'; see
-    ``close_spelling``). Merely sharing a sense is not enough: 'house' and
-    'home' share one but mean different things. The word with the lower
-    ``drop_priority`` is kept.
+    Each duplicate pair keeps the word with the smaller
+    ``keep_priority(word, shared_synsets)``, judged on the senses the pair
+    shares (so 'hummus' beats 'humus' on the chickpea-dip sense even though
+    'humus' heads its own soil sense). Pairs are resolved one at a time,
+    strongest keeper first, and a word that already lost is not used again,
+    so variant chains cannot spread: 'hammock' (bed) loses nothing because
+    its variant 'hummock' is also a synonym of 'knoll'.
     """
-    ordered = sorted(words, key=drop_priority)
-    kept: list[str] = []
+    by_synset: dict[str, list[str]] = {}
+    for word in sorted(words):
+        for synset in synsets_of[word]:
+            by_synset.setdefault(synset, []).append(word)
+    pairs = {
+        (a, b)
+        for group in by_synset.values()
+        for a, b in itertools.combinations(group, 2)
+        if is_duplicate_pair(a, b, synsets_of)
+    }
+
+    def ranked(pair: tuple[str, str]) -> list[tuple[tuple, str]]:
+        shared = synsets_of[pair[0]] & synsets_of[pair[1]]
+        return sorted((keep_priority(word, shared), word) for word in pair)
+
     dropped: dict[str, str] = {}
-    for word in ordered:
-        mine = synsets_of[word]
-        twin = next(
-            (
-                other
-                for other in kept
-                if synsets_of[other] == mine
-                or (
-                    mine & synsets_of[other]
-                    and (mine <= synsets_of[other] or synsets_of[other] <= mine)
-                    and close_spelling(other, word)
-                )
-            ),
-            None,
-        )
-        if twin is None:
-            kept.append(word)
-        else:
-            dropped[word] = twin
+    for pair in sorted(pairs, key=ranked):
+        if pair[0] in dropped or pair[1] in dropped:
+            continue
+        (_, keeper), (_, loser) = ranked(pair)
+        dropped[loser] = keeper
     return dropped
 
 
-def _dedupe(reasons: Iterable[Reason]) -> list[Reason]:
-    seen: set[Reason] = set()
-    unique: list[Reason] = []
-    for reason in reasons:
-        if reason not in seen:
-            seen.add(reason)
-            unique.append(reason)
-    return unique
-
-
 # --- Combination screening --------------------------------------------------
-
 
 COMPOUND_DENIED_PRIMARY_ANCESTORS = frozenset(
     {"ammunition.n.01", "explosive.n.01", "explosive_device.n.01", "weapon.n.01"}
@@ -432,23 +452,22 @@ class Conflict:
 def find_phrase_conflicts(
     accepted: Iterable[str],
     phrases: Iterable[tuple[tuple[str, ...], str]],
-    normalize: Callable[[str], str],
 ) -> list[Conflict]:
     """Flag phrases (e.g. 'golden shower') whose every token is an accepted word.
 
-    ``normalize`` maps a token to the key used to match accepted words (the
-    stemmer), so plural phrase tokens still match singular list words.
+    Tokens are matched after plural stripping, so 'brown showers' still
+    matches the words 'brown' and 'shower'.
     """
-    by_key = {normalize(word): word for word in accepted}
+    by_key = {stem_word(word): word for word in accepted}
     conflicts: list[Conflict] = []
     seen: set[tuple[str, ...]] = set()
     for tokens, source in phrases:
         if len(tokens) < 2:
             continue
-        matched = [by_key.get(normalize(token)) for token in tokens]
+        matched = [by_key.get(stem_word(token)) for token in tokens]
         if any(word is None for word in matched):
             continue
-        words = tuple(dict.fromkeys(matched))  # dedupe, keep order
+        words = tuple(dict.fromkeys(matched))
         if words in seen:
             continue
         seen.add(words)
@@ -459,21 +478,20 @@ def find_phrase_conflicts(
 def find_compound_conflicts(
     accepted: Iterable[str],
     compounds: Iterable[tuple[str, str]],
-    normalize: Callable[[str], str],
 ) -> list[Conflict]:
     """Flag closed compounds (e.g. 'pothead') that split into two accepted words.
 
-    ``compounds`` holds (compound, source) pairs. The second half is
-    normalized so a plural compound ('potheads') still matches 'head'.
+    ``compounds`` holds (compound, source) pairs. The second half is matched
+    after plural stripping, so 'potheads' still matches 'head'.
     """
     accepted_set = set(accepted)
-    by_key = {normalize(word): word for word in accepted_set}
+    by_key = {stem_word(word): word for word in accepted_set}
     conflicts: list[Conflict] = []
     seen: set[tuple[str, str]] = set()
     for compound, source in compounds:
         for split in range(MIN_WORD_LENGTH, len(compound) - MIN_WORD_LENGTH + 1):
             first = compound[:split]
-            second = by_key.get(normalize(compound[split:]))
+            second = by_key.get(stem_word(compound[split:]))
             if first not in accepted_set or second is None or (first, second) in seen:
                 continue
             seen.add((first, second))
@@ -484,13 +502,12 @@ def find_compound_conflicts(
 def find_boundary_conflicts(accepted: Sequence[str], terms: Iterable[str]) -> list[Conflict]:
     """Flag ordered pairs where an offensive term spans the join of two words.
 
-    Only the join matters (e.g. 'X' + 'Y' -> '...xy...'): a term fully inside
-    one word was already handled by the single-word rules.
+    Only the join matters ('zebra' + 'pear' -> 'zeb-rape-ar'): a term fully
+    inside one word was already handled by the single-word rules.
     """
-    words = list(accepted)
     by_suffix: dict[str, list[str]] = {}
     by_prefix: dict[str, list[str]] = {}
-    for word in words:
+    for word in accepted:
         for size in range(1, len(word) + 1):
             by_suffix.setdefault(word[-size:], []).append(word)
             by_prefix.setdefault(word[:size], []).append(word)
@@ -505,9 +522,7 @@ def find_boundary_conflicts(accepted: Sequence[str], terms: Iterable[str]) -> li
                     if first == second or (first, second) in seen:
                         continue
                     seen.add((first, second))
-                    conflicts.append(
-                        Conflict((first, second), "boundary", f"'{first}{second}' contains '{term}'")
-                    )
+                    conflicts.append(Conflict((first, second), "boundary", f"'{first}{second}' contains '{term}'"))
     return conflicts
 
 

@@ -1,0 +1,84 @@
+# Category gate (the positive model). A word is eligible only when its main
+# noun sense falls under an `allow` category below. The most specific listed
+# category wins, so a `deny` line carves a risky branch out of an allowed one
+# (clothing inside covering, hoofed mammals inside animals).
+#
+# Format: allow|deny  wordnet-synset-id  # label: reason
+#
+# Risk tiers come from measurements on Open English WordNet: how often common
+# words in the category carry a person/body/slur/sexual/drug sense, form
+# unsafe compounds, or appear in profanity-list phrases. See
+# docs/selection-model.md for the numbers. Proposed by AI (see README
+# "AI use"); needs human review.
+
+# --- Low risk: nature -------------------------------------------------------
+allow plant.n.02                  # plants: trees, flowers, herbs, ferns, grasses
+allow fungus.n.01                 # fungi: mushrooms
+allow plant_part.n.01             # plant parts: leaf, petal, acorn
+allow geological_formation.n.01   # landforms: mountain, valley, beach, cliff
+allow body_of_water.n.01          # water: river, lake, ocean, bay
+allow celestial_body.n.01         # sky: moon, planet, comet
+allow rock.n.02                   # rocks: boulder, pebble
+allow land.n.05                   # land: ground, shore
+allow atmospheric_phenomenon.n.01 # weather: rain, breeze, fog, rainbow
+allow physical_phenomenon.n.01    # physical phenomena: light, sound, tides, magnetism
+allow tract.n.01                  # land areas: field, meadow, garden, park
+allow geographical_area.n.01      # places: city, farmland
+allow season.n.02                 # seasons
+allow hour.n.02                   # times of day: dawn, noon, dusk
+allow day.n.05                    # times of day: afternoon, evening
+allow morning.n.01                # times of day: morning
+allow night.n.02                  # times of day: night
+allow week.n.01                   # calendar: week
+allow weekend.n.01                # calendar: weekend
+allow year.n.01                   # calendar: year
+allow decade.n.01                 # calendar: decade
+allow century.n.01                # calendar: century
+allow vacation.n.01               # calendar: holiday, vacation
+
+# --- Low risk: materials and shapes ------------------------------------------
+allow substance.n.01              # materials: minerals, metals, elements, fuels
+allow substance.n.08              # food and other substances: fruit, vegetables, dishes, drinks
+allow fabric.n.01                 # fabrics: silk, wool, denim
+allow shape.n.03                  # shapes: circle, spiral, cube
+deny  concave_shape.n.01          # concave shapes: hole, cavity, pit (sexual slang)
+
+# --- Low risk: made things ---------------------------------------------------
+allow structure.n.01              # structures: bridge, barn, tower, rooms
+allow device.n.01                 # devices: clock, lamp, bell, musical instruments
+allow conveyance.n.03             # vehicles: wagon, canoe, rocket
+allow decoration.n.01             # decorations: banner, wreath, ribbon
+allow plaything.n.01              # toys
+allow way.n.06                    # roads and passages: lane, tunnel, stairs
+allow work_of_art.n.01            # artworks: mosaic, mural, sculpture
+
+# --- Medium risk, kept (word-level review still applies) --------------------
+allow animal.n.01                 # animals: birds, fish, insects, reptiles, most mammals
+allow container.n.01              # containers: basket, jar, vase
+allow furniture.n.01              # furniture: desk, bench, cabinet (bed, chair, stool fail the person/body rules)
+allow covering.n.02               # coverings: roof, blanket, curtain
+allow equipment.n.01              # equipment: camera, parachute
+allow facility.n.01               # facilities: airport, museum
+allow commodity.n.01              # goods: cargo, freight
+allow kitchen_utensil.n.01        # kitchenware: kettle, skillet, wok
+allow tableware.n.01              # tableware: plate, bowl, spoon
+
+# --- Medium risk, dropped ----------------------------------------------------
+deny  clothing.n.01               # clothing: worn on the body (bikini, bodice, stocking)
+deny  footwear.n.02               # footwear and hosiery: stocking, tights
+deny  headdress.n.01              # headwear: religious and cultural headdress
+deny  ungulate.n.01               # hoofed mammals: farm-animal insults (pig, cow, ass, goat), gendered (mare)
+deny  primate.n.02                # primates: used as racist insults (ape, monkey, baboon)
+deny  young_mammal.n.01           # young animals: sexualised or demeaning uses (kitten, filly, whelp)
+deny  pest.n.04                   # pests: dehumanising rhetoric (vermin)
+deny  parasite.n.01               # parasites: insults (leech, louse)
+deny  implement.n.01              # tools and implements: knife, axe, razor; rod, stick, pole
+deny  restraint.n.06              # restraints: handcuff, shackle, muzzle
+deny  trap.n.01                   # traps: snare, noose
+deny  medical_instrument.n.01     # medical instruments: syringe, scalpel, catheter
+deny  plumbing_fixture.n.01       # plumbing fixtures: toilet, urinal, bidet
+deny  weapon.n.01                 # weapons
+
+# --- Food: kept with the riskiest groups removed ----------------------------
+deny  meat.n.01                   # meat: innuendo (sausage, wiener), dietary and religious sensitivities
+deny  baked_goods.n.01            # baked goods: innuendo (buns, crumpet, cream pie)

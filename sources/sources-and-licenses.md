@@ -1,78 +1,53 @@
-# Sources, licenses, and curation notes (English-only)
+# Sources, licenses and curation notes
 
-## Scope for this effort
-This effort is restricted to **English** word lists only.
+The wordlists are built from a single word source, Open English WordNet.
+Every other input is used only as a filter and contributes no words. All
+inputs are pinned by commit and SHA-256 in `scripts/build_safe_wordlist.py`.
 
-## Evaluation criteria
-A source is considered "best" for this project when it has:
-1. a permissive/reusable license,
-2. clear attribution requirements,
-3. explicit safety-aware curation (or clear evidence of offensive-term filtering),
-4. enough vocabulary quality for Diceware-style passphrase generation.
+## Inputs used
 
-## English candidate sources reviewed
+| Input | Role | License | Attribution needed |
+|---|---|---|---|
+| [Open English WordNet](https://en-word.net/) 2025+ (NLTK format, [pinned](https://github.com/nltk/nltk_data/blob/550b6625bcef1f2abff2ff770a5a0d272c9c6b2a/packages/corpora/english_wordnet.zip)) | **Word source.** Part of speech, categories (lexicographer files and hypernyms), usage labels, definitions | CC BY 4.0, plus the Princeton WordNet License for the underlying data | Yes: the OEWN team and Princeton University. See `ATTRIBUTION.md` |
+| [SCOWL / English Speller Database](https://github.com/en-wl/wordlist) (`data/scowl-pre.txt`, pinned) | **Commonness filter.** Keeps nouns listed at size ≤ 50; rejects words marked `offensive-*` or `vulgar-*` | Permissive: "Permission to use, copy, modify, distribute, and sell any part … or word lists created from it, is hereby granted without fee, provided that the above copyright notice appears in all copies" | Yes: keep the notice. See `ATTRIBUTION.md` |
+| [LDNOOBW](https://github.com/LDNOOBW/List-of-Dirty-Naughty-Obscene-and-Otherwise-Bad-Words) `en` (pinned) | **Denylist.** Single words and multi-word phrases | CC BY 4.0 | Not redistributed. Credited in `ATTRIBUTION.md` |
+| [dsojevic/profanity-list](https://github.com/dsojevic/profanity-list) `en.json` (pinned) | **Denylist** with severities; severity-4 terms are also checked across word joins | MIT | Not redistributed. Credited in `ATTRIBUTION.md` |
 
-### 1) Asian Diceware (English output)
-- Source: https://github.com/anoni-net/asian-diceware
-- English list used: `output/asian_diceware_7776.txt`
-- License: data/wordlists are CC BY 4.0 (`LICENSE-DATA`); code is MIT.
-- Attribution needed: yes (CC BY attribution + indicate changes).
-- Safety curation: explicit "No offensive" acceptance criterion and profanity/slur-sensitive filtering in project spec/process.
-- Verdict: **Best source** for this project's safety objective.
+Curation notes:
+- **WordNet** has no safety curation; its `noun.animal` file includes slurs
+  such as `bitch`. It is used for its structure. The positive model and the
+  safety rules do the filtering.
+- **SCOWL** marks only "the worst offenders" as offensive or vulgar, so it
+  cannot be the only safety net.
+- **The profanity lists** catch modern slang that WordNet lacks. Neither is
+  complete.
 
-### 2) EFF large wordlist (English)
-- Source (canonical): https://www.eff.org/files/2016/07/18/eff_large_wordlist.txt
-- Source used for automation reliability: https://raw.githubusercontent.com/ulif/diceware/master/diceware/wordlists/wordlist_en_eff.txt
-- License: CC BY 3.0 (as documented in `ulif/diceware` COPYRIGHT for the EFF file).
-- Attribution needed: yes (EFF + CC BY 3.0).
-- Safety curation: curated for passphrase usability and includes avoidance rationale for problematic/confusable words, but not a full modern safety policy.
-- Verdict: **Strong source** with attribution requirements.
+## Sources evaluated and rejected
 
-### 3) BIP-39 English wordlist
-- Source: `bitcoin/bips` (`bip-0039/english.txt`)
-- License: MIT (BIP-39 spec license).
-- Attribution needed: retain MIT notice in redistribution contexts.
-- Safety curation: mnemonic quality and usability curation; not primarily social-safety curation.
-- Verdict: **Good permissive baseline source**.
+These were considered as word sources. The checks behind the numbers below
+were run in October 2026: each list was run through the profanity lists, and
+the share of its words passing the positive model was measured.
 
-## English sources not selected as primary inputs
+| Source | License | Safety curation (as stated) | Finding | Verdict |
+|---|---|---|---|---|
+| Asian Diceware 7776 | CC BY 4.0 (data), MIT (code) | Spec lists a "No offensive" acceptance test | Contains `cunts`, `fucks`, `fucker`, `assholes`, `whores`, `rapists`, `retarded`, `dyke`. Only 14% pass the positive model | Rejected: its safety claim does not hold |
+| EFF large wordlist | CC BY 3.0 US | "We manually checked and attempted to remove as many profane, insulting, sensitive, or emotionally-charged words as possible" | Contains `grope`, `hardcore`, `swinger`. 17% pass the positive model; 15% are person nouns | Rejected: general vocabulary |
+| EFF short lists 1 and 2 | Same as above | Not confirmed for the short lists | List 1 contains `grope`, `panty`. 22% pass | Rejected |
+| BIP-39 English | MIT | None stated for English | No profanity, but 26% verbs and 9% person nouns. 20% pass | Rejected |
+| Glitch friendly-words | MIT | "All of the words and their generated pairings should be safe for children of all cultures" | Best curated list found (no profanity; 42% pass), but still includes `knife`, `sword`, `skull`, `church`, `eggplant`, and many dinosaur names | Rejected as a source |
+| mnemonicode (Oren Tirosh) | MIT-style | Avoids offensive words *and* words "too likely to create combinations", religion, and negative meanings | Same goal as this project, but still contains `vodka`, `bikini`, `cartel` and proper names | Rejected; its method informed this model |
+| Quick, Draw! categories; Ogden's 200 picturable nouns; picture-naming norms | CC BY 4.0 | Picturable by design | Small (200–1,300), and include weapons, toilets and skulls | Not needed: WordNet categories cover the same idea |
+| Orchard Street, sts10 generated lists | CC BY-SA 4.0 | Profanity removed | ShareAlike is less permissive than wanted | Rejected on license |
+| google-10000-english "no swears" | None | Swears removed | No license; still has `naked`, `kill`, `bomb` | Rejected |
+| niceware, Pokerware, RFC 1751, PGP word list, Monero/Electrum lists | Various | None, or explicitly unchecked | Contain slurs or violence (`rape`, `coon`, `bomb`) | Rejected |
 
-### Orchard Street "clean" Diceware list
-- Source: https://github.com/sts10/orchard-street-wordlists
-- Safety signal: explicit profanity exclusion.
-- License: CC BY-SA 4.0.
-- Why not primary: strong safety curation, but ShareAlike is less permissive than preferred for this repository's base source set.
+Psycholinguistic norms (concreteness, valence, age of acquisition) would make
+good positive signals. They were not used because no clear permissive data
+license could be confirmed for them; some (NRC VAD, the MRC database) appear
+to be non-commercial.
 
-## Selected source set for automation
-The consolidation script uses these English sources:
-1. Asian Diceware 7776 (CC BY 4.0)
-2. EFF large wordlist (CC BY 3.0; fetched via GitHub mirror)
-3. BIP-39 English (MIT)
+## Output license
 
-## Notes
-- Inclusion in the consolidated candidate list does **not** mean final acceptance.
-- Additional manual safety review and combination-level screening are still required.
-- Pre-filter consolidation can still include unsafe terms and must not be treated as a final safe list.
-
-## Current consolidation results
-
-Use `wordlists/generated/stats.json` for the current generated counts.
-
-Reporting conventions in `stats.json`:
-- `word_count`: total parsed words from the source list
-- `stemmed_word_count`: number of words passed through stemming (pre-unique)
-- `unique_word_count`: unique source words before stemming
-- `post_stem_unique_word_count`: unique representative words after applying lowercase -> stem -> unique
-- `unique_stem_count`: unique stems after applying lowercase -> stem -> unique
-- `consolidated_unique_word_count`: unique representative words across all selected sources
-- `consolidated_unique_stem_count`: unique stems across all selected sources
-
-Result files (generated at runtime by the script):
-- `wordlists/generated/consolidated-english-words.txt`
-- `wordlists/generated/consolidated-english-stems.txt`
-- `wordlists/generated/by-source/asian_diceware_7776_en.txt`
-- `wordlists/generated/by-source/eff_large_en.txt`
-- `wordlists/generated/by-source/bip39_english.txt`
-- `wordlists/generated/by-source-stems/asian_diceware_7776_en.txt`
-- `wordlists/generated/by-source-stems/eff_large_en.txt`
-- `wordlists/generated/by-source-stems/bip39_english.txt`
+The generated lists are derived from Open English WordNet (CC BY 4.0) and
+filtered with SCOWL. Anyone redistributing them must carry the notices in
+`ATTRIBUTION.md`. This repository does not yet declare its own license.
