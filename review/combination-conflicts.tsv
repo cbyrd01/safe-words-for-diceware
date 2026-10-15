@@ -3,7 +3,6 @@ actuator + aperture	boundary	'actuatoraperture' contains 'rape'	aperture
 adaptor + aperture	boundary	'adaptoraperture' contains 'rape'	aperture
 aerator + aperture	boundary	'aeratoraperture' contains 'rape'	aperture
 agar + aperture	boundary	'agaraperture' contains 'rape'	aperture
-airliner + aperture	boundary	'airlineraperture' contains 'rape'	aperture
 alabaster + aperture	boundary	'alabasteraperture' contains 'rape'	aperture
 alder + aperture	boundary	'alderaperture' contains 'rape'	aperture
 alligator + aperture	boundary	'alligatoraperture' contains 'rape'	aperture
@@ -18,7 +17,6 @@ aquifer + aperture	boundary	'aquiferaperture' contains 'rape'	aperture
 arbor + aperture	boundary	'arboraperture' contains 'rape'	aperture
 armchair + aperture	boundary	'armchairaperture' contains 'rape'	aperture
 armor + aperture	boundary	'armoraperture' contains 'rape'	aperture
-atomizer + aperture	boundary	'atomizeraperture' contains 'rape'	aperture
 attar + aperture	boundary	'attaraperture' contains 'rape'	aperture
 backwater + aperture	boundary	'backwateraperture' contains 'rape'	aperture
 baluster + aperture	boundary	'balusteraperture' contains 'rape'	aperture
@@ -196,7 +194,7 @@ curler + aperture	boundary	'curleraperture' contains 'rape'	aperture
 cursor + aperture	boundary	'cursoraperture' contains 'rape'	aperture
 cylinder + aperture	boundary	'cylinderaperture' contains 'rape'	aperture
 decanter + aperture	boundary	'decanteraperture' contains 'rape'	aperture
-decor + aperture	boundary	'decoraperture' contains 'rape'	aperture
+decor + aperture	boundary	'decoraperture' contains 'rape'	decor
 deflector + aperture	boundary	'deflectoraperture' contains 'rape'	aperture
 defroster + aperture	boundary	'defrosteraperture' contains 'rape'	aperture
 detector + aperture	boundary	'detectoraperture' contains 'rape'	aperture
@@ -315,7 +313,6 @@ heather + aperture	boundary	'heatheraperture' contains 'rape'	aperture
 highchair + aperture	boundary	'highchairaperture' contains 'rape'	aperture
 horsehair + aperture	boundary	'horsehairaperture' contains 'rape'	aperture
 incubator + aperture	boundary	'incubatoraperture' contains 'rape'	aperture
-inhalator + aperture	boundary	'inhalatoraperture' contains 'rape'	aperture
 inhaler + aperture	boundary	'inhaleraperture' contains 'rape'	aperture
 injector + aperture	boundary	'injectoraperture' contains 'rape'	aperture
 insulator + aperture	boundary	'insulatoraperture' contains 'rape'	aperture
@@ -391,7 +388,6 @@ okra + piston	boundary	'okrapiston' contains 'rapist'	okra
 osier + aperture	boundary	'osieraperture' contains 'rape'	aperture
 otter + aperture	boundary	'otteraperture' contains 'rape'	aperture
 outrigger + aperture	boundary	'outriggeraperture' contains 'rape'	aperture
-oxidizer + aperture	boundary	'oxidizeraperture' contains 'rape'	aperture
 oyster + aperture	boundary	'oysteraperture' contains 'rape'	aperture
 pager + aperture	boundary	'pageraperture' contains 'rape'	aperture
 pannier + aperture	boundary	'pannieraperture' contains 'rape'	aperture
@@ -483,7 +479,6 @@ reamer + aperture	boundary	'reameraperture' contains 'rape'	aperture
 recliner + aperture	boundary	'reclineraperture' contains 'rape'	aperture
 reflector + aperture	boundary	'reflectoraperture' contains 'rape'	aperture
 resistor + aperture	boundary	'resistoraperture' contains 'rape'	aperture
-resonator + aperture	boundary	'resonatoraperture' contains 'rape'	aperture
 retriever + aperture	boundary	'retrieveraperture' contains 'rape'	aperture
 river + aperture	boundary	'riveraperture' contains 'rape'	aperture
 roadster + aperture	boundary	'roadsteraperture' contains 'rape'	aperture
@@ -579,7 +574,6 @@ slingshot + aircraft	boundary	'slingshotaircraft' contains 'shota'	slingshot
 slingshot + airfield	boundary	'slingshotairfield' contains 'shota'	slingshot
 slingshot + airfoil	boundary	'slingshotairfoil' contains 'shota'	slingshot
 slingshot + airline	boundary	'slingshotairline' contains 'shota'	slingshot
-slingshot + airliner	boundary	'slingshotairliner' contains 'shota'	slingshot
 slingshot + airplane	boundary	'slingshotairplane' contains 'shota'	slingshot
 slingshot + airport	boundary	'slingshotairport' contains 'shota'	slingshot
 slingshot + airship	boundary	'slingshotairship' contains 'shota'	slingshot
@@ -623,7 +617,6 @@ slingshot + android	boundary	'slingshotandroid' contains 'shota'	slingshot
 slingshot + anemone	boundary	'slingshotanemone' contains 'shota'	slingshot
 slingshot + angle	boundary	'slingshotangle' contains 'shota'	slingshot
 slingshot + animal	boundary	'slingshotanimal' contains 'shota'	slingshot
-slingshot + anime	boundary	'slingshotanime' contains 'shota'	slingshot
 slingshot + anise	boundary	'slingshotanise' contains 'shota'	slingshot
 slingshot + aniseed	boundary	'slingshotaniseed' contains 'shota'	slingshot
 slingshot + anode	boundary	'slingshotanode' contains 'shota'	slingshot
@@ -679,7 +672,6 @@ slingshot + asteroid	boundary	'slingshotasteroid' contains 'shota'	slingshot
 slingshot + astrakhan	boundary	'slingshotastrakhan' contains 'shota'	slingshot
 slingshot + atoll	boundary	'slingshotatoll' contains 'shota'	slingshot
 slingshot + atom	boundary	'slingshotatom' contains 'shota'	slingshot
-slingshot + atomizer	boundary	'slingshotatomizer' contains 'shota'	slingshot
 slingshot + attar	boundary	'slingshotattar' contains 'shota'	slingshot
 slingshot + auk	boundary	'slingshotauk' contains 'shota'	slingshot
 slingshot + aureole	boundary	'slingshotaureole' contains 'shota'	slingshot
@@ -879,7 +871,6 @@ terrapin + graphite	boundary	'terrapingraphite' contains 'raping'	terrapin
 terrapin + grassland	boundary	'terrapingrassland' contains 'raping'	terrapin
 terrapin + grate	boundary	'terrapingrate' contains 'raping'	terrapin
 terrapin + grater	boundary	'terrapingrater' contains 'raping'	terrapin
-terrapin + grating	boundary	'terrapingrating' contains 'raping'	terrapin
 terrapin + gravel	boundary	'terrapingravel' contains 'raping'	terrapin
 terrapin + gravity	boundary	'terrapingravity' contains 'raping'	terrapin
 terrapin + gravy	boundary	'terrapingravy' contains 'raping'	terrapin
@@ -993,18 +984,29 @@ barn + burner	compound	'barnburner' (WordNet 'barnburner': barnburner.n.01 names
 door + mat	compound	'doormat' (WordNet 'doormat': weakling.n.01 names a kind of person)	mat
 eaves + dropper	compound	'eavesdropper' (WordNet 'eavesdropper': eavesdropper.n.01 names a kind of person)	dropper
 lamp + lighter	compound	'lamplighter' (WordNet 'lamplighter': lamplighter.n.01 names a kind of person)	lighter
+prop + agate	compound	'propagator' (WordNet 'propagator': propagator.n.01 names a kind of person)	agate
 serge + ant	compound	'sergeant' (WordNet 'sergeant': sergeant.n.01 names a kind of person)	serge
 shutter + bug	compound	'shutterbug' (WordNet 'shutterbug': shutterbug.n.01 names a kind of person)	bug
 tote + mist	compound	'totemist' (WordNet 'totemist': totemist.n.01 names a kind of person)	tote
 winch + ester	compound	'winchester' (WordNet 'winchester': winchester.n.02 labelled trademark.n.02)	ester
+aircraft + office	phrase	'aircraft officer' (WordNet 'aircraft_officer': aircraft_officer.n.01 names a kind of person)	office
 bay + window	phrase	'bay window' (WordNet 'bay_window': pot.n.07 is colloquial noun.body)	bay
 bench + warmer	phrase	'bench warmer' (WordNet 'bench_warmer': bench_warmer.n.01 names a kind of person)	warmer
 charcoal + burner	phrase	'charcoal burner' (WordNet 'charcoal_burner': charcoal_burner.n.01 names a kind of person)	burner
+coal + mineral	phrase	'coal miner' (WordNet 'coal_miner': coal_miner.n.01 names a kind of person)	coal
 couch + potato	phrase	'couch potato' (WordNet 'couch_potato': couch_potato.n.01 names a kind of person)	potato
+desk + office	phrase	'desk officer' (WordNet 'desk_officer': desk_officer.n.01 names a kind of person)	office
+field + office	phrase	'field officer' (WordNet 'field_officer': field-grade_officer.n.01 names a kind of person)	office
+flag + office	phrase	'flag officer' (WordNet 'flag_officer': flag_officer.n.01 names a kind of person)	office
 goody	phrase	'goody goody' (WordNet 'goody-goody': goody-goody.n.01 names a kind of person)	goody
-lithium + carbonate	phrase	'lithium carbonate' (WordNet 'lithium_carbonate': lithium_carbonate.n.01 is a drug_of_abuse.n.01)	carbonate
+highway + engine	phrase	'highway engineer' (WordNet 'highway_engineer': highway_engineer.n.01 names a kind of person)	highway
+house + decor	phrase	'house decorator' (WordNet 'house_decorator': interior_decorator.n.01 names a kind of person)	decor
+lithium + carbon	phrase	'lithium carbonate' (WordNet 'lithium_carbonate': lithium_carbonate.n.01 is a drug_of_abuse.n.01)	lithium
 night + owl	phrase	'night owl' (WordNet 'night_owl': night_owl.n.01 names a kind of person)	owl
+rocket + engine	phrase	'rocket engineer' (WordNet 'rocket_engineer': rocket_engineer.n.01 names a kind of person)	rocket
 rocket + fuel	phrase	'rocket fuel' (WordNet 'rocket_fuel': main sense rocket_fuel.n.01 is a explosive.n.01)	rocket
+rocket + propeller	phrase	'rocket propellant' (WordNet 'rocket_propellant': main sense rocket_fuel.n.01 is a explosive.n.01)	rocket
+room + decor	phrase	'room decorator' (WordNet 'room_decorator': interior_decorator.n.01 names a kind of person)	decor
 sea + serpent	phrase	'sea serpent' (WordNet 'sea_serpent': sea_serpent.n.01 names a kind of person)	serpent
 soup + strainer	phrase	'soup strainer' (WordNet 'soup-strainer': soup-strainer.n.01 is colloquial noun.body)	strainer
 sulfur + mustard	phrase	'sulfur mustard' (WordNet 'sulfur_mustard': main sense mustard_gas.n.01 is a weapon.n.01)	mustard

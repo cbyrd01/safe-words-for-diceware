@@ -27,6 +27,11 @@ CATEGORIES = {
 NO_OVERRIDES = Overrides()
 
 
+def strip_s(word):
+    """A stand-in stemmer so these tests do not need NLTK."""
+    return word[:-1] if word.endswith("s") else word
+
+
 def evaluate(word, senses, overrides=NO_OVERRIDES, verb_base=None):
     return [r.rule for r in rules.evaluate_word(word, senses, CATEGORIES, overrides, verb_base)]
 
@@ -139,8 +144,9 @@ class DuplicateTest(unittest.TestCase):
         synsets = {"house": frozenset({"house.n.01", "home.n.01"}), "home": frozenset({"home.n.01", "home.n.02"})}
         self.assertEqual(rules.find_duplicates(synsets, synsets, self.keep_first_alphabetically), {})
 
-    def test_plural_dropped_when_singular_present(self):
-        self.assertEqual(rules.find_plural_pairs(["stair", "stairs", "grits", "glass"]), {"stairs": "stair"})
+    def test_words_sharing_a_stem_keep_one(self):
+        dropped = rules.find_stem_duplicates(["stair", "stairs", "grit", "lake"], strip_s, lambda w: (len(w), w))
+        self.assertEqual(dropped, {"stairs": "stair"})
 
     def test_variant_chains_do_not_spread(self):
         synsets = {
@@ -158,15 +164,15 @@ class DuplicateTest(unittest.TestCase):
 
 
 class CombinationTest(unittest.TestCase):
-    def test_phrase_tokens_match_after_plural_stripping(self):
-        conflicts = rules.find_phrase_conflicts(["brown", "shower", "lake"], [(("brown", "showers"), "list")])
+    def test_phrase_tokens_match_by_stem(self):
+        conflicts = rules.find_phrase_conflicts(["brown", "shower", "lake"], [(("brown", "showers"), "list")], strip_s)
         self.assertEqual([c.words for c in conflicts], [("brown", "shower")])
 
     def test_phrase_needs_every_token(self):
-        self.assertEqual(rules.find_phrase_conflicts(["golden"], [(("golden", "shower"), "list")]), [])
+        self.assertEqual(rules.find_phrase_conflicts(["golden"], [(("golden", "shower"), "list")], strip_s), [])
 
     def test_closed_compound_splits_into_two_words(self):
-        conflicts = rules.find_compound_conflicts(["pot", "head", "lake"], [("potheads", "list")])
+        conflicts = rules.find_compound_conflicts(["pot", "head", "lake"], [("potheads", "list")], strip_s)
         self.assertEqual([c.words for c in conflicts], [("pot", "head")])
 
     def test_boundary_term_spanning_the_join(self):
@@ -195,12 +201,6 @@ class CombinationTest(unittest.TestCase):
 
 
 class HelpersTest(unittest.TestCase):
-    def test_stem_word(self):
-        self.assertEqual(rules.stem_word("berries"), "berry")
-        self.assertEqual(rules.stem_word("cats"), "cat")
-        self.assertEqual(rules.stem_word("glass"), "glass")
-        self.assertEqual(rules.stem_word("bus"), "bus")
-
     def test_dice_list(self):
         words = [f"w{i:04d}" for i in range(1296)][::-1]
         lines = rules.format_dice_list(words, 4)

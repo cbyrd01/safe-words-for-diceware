@@ -285,6 +285,10 @@ def main() -> None:
     cache = repo / "build" / "downloads"
     filters_dir = repo / "filters"
 
+    from nltk.stem import SnowballStemmer
+
+    # One normalisation everywhere: lowercase -> Snowball stem.
+    stem = SnowballStemmer("english").stem
     wn = load_wordnet(fetch(WORDNET, cache, args.offline))
     scowl = parse_scowl(fetch(SCOWL, cache, args.offline).read_text(encoding="utf-8"))
     categories = load_categories(filters_dir / "categories.txt", wn)
@@ -296,11 +300,9 @@ def main() -> None:
         for entry, severity in profanity_entries(pinned, content):
             if entry and severity >= profanity.get(entry, (0, ""))[0]:
                 profanity[entry] = (severity, pinned.name)
-    profane_words = {}
-    for entry, (_, source) in profanity.items():
-        if len(tokens_of(entry)) == 1:
-            profane_words[tokens_of(entry)[0]] = source
-            profane_words[rules.stem_word(tokens_of(entry)[0])] = source
+    # Single words match exactly or as a plural ('cunts' flags 'cunt'). Not by
+    # stem: 'snowballing' is slang, 'snowball' is not.
+    profane_words = {tokens_of(e)[0]: src for e, (_, src) in profanity.items() if len(tokens_of(e)) == 1}
 
     # Candidates: WordNet nouns that SCOWL lists as common lowercase nouns.
     candidates = sorted(
@@ -319,7 +321,7 @@ def main() -> None:
         flagged = sorted(note for note in scowl[word].usage if SCOWL_DENIED_USAGE.match(note))
         if flagged:
             reasons.insert(0, rules.Reason("scowl-usage", f"SCOWL marks it {', '.join(flagged)}"))
-        hit = profane_words.get(word) or profane_words.get(rules.stem_word(word))
+        hit = next((profane_words[form] for form in (word, word + "s", word + "es") if form in profane_words), None)
         if hit:
             reasons.insert(0, rules.Reason("profanity-list", f"listed in {hit}"))
         decisions[word] = reasons
@@ -356,27 +358,32 @@ def main() -> None:
 
     for word, kept in rules.find_duplicates(list(synsets_of), synsets_of, keep_priority).items():
         decisions[word].append(rules.Reason("duplicate", f"variant or synonym of '{kept}'"))
-    for word, singular in rules.find_plural_pairs(accepted()).items():
-        decisions[word].append(rules.Reason("duplicate", f"plural of '{singular}'"))
+    def stem_keep_priority(word: str) -> tuple:
+        """Within a stem group prefer the commoner, then the shorter base word
+        ('magnet' over 'magnetism')."""
+        return (scowl[word].size, len(word), -tagged_count(word), drop_priority(word)[-1])
+
+    for word, kept in rules.find_stem_duplicates(accepted(), stem, stem_keep_priority).items():
+        decisions[word].append(rules.Reason("duplicate", f"same stem as '{kept}'"))
 
     # Combination screening
     safe = accepted()
     safe_set = set(safe)
-    safe_stems = {rules.stem_word(w) for w in safe}
+    safe_stems = {stem(w) for w in safe}
     phrases = [(tokens_of(e), src) for e, (_, src) in profanity.items() if len(tokens_of(e)) > 1]
     phrases += [(tokens_of(e), f"filters/phrase-denylist.txt: {why}") for e, why in read_entries(filters_dir / "phrase-denylist.txt")]
     compounds = [(e, src) for e, (_, src) in profanity.items() if len(tokens_of(e)) == 1]
 
     def splits_into_safe_words(name: str) -> bool:
         return any(
-            name[:i] in safe_set and rules.stem_word(name[i:]) in safe_stems
+            name[:i] in safe_set and stem(name[i:]) in safe_stems
             for i in range(rules.MIN_WORD_LENGTH, len(name) - rules.MIN_WORD_LENGTH + 1)
         )
 
     for lemma_name in wn.all_lemma_names():
         name = lemma_name.lower()
         parts = tokens_of(name)
-        is_phrase = len(parts) == 2 and all(rules.stem_word(p) in safe_stems for p in parts)
+        is_phrase = len(parts) == 2 and all(stem(p) in safe_stems for p in parts)
         is_compound = len(parts) == 1 and name.isalpha() and splits_into_safe_words(name)
         if not (is_phrase or is_compound):
             continue
@@ -394,8 +401,8 @@ def main() -> None:
         if e.isalpha() and len(e) >= BOUNDARY_TERM_MIN_LENGTH and severity >= BOUNDARY_TERM_MIN_SEVERITY
     ]
     conflicts = (
-        rules.find_phrase_conflicts(safe, phrases)
-        + rules.find_compound_conflicts(safe, compounds)
+        rules.find_phrase_conflicts(safe, phrases, stem)
+        + rules.find_compound_conflicts(safe, compounds, stem)
         + rules.find_boundary_conflicts(safe, boundary_terms)
     )
     dropped = rules.resolve_conflicts(conflicts, drop_priority)

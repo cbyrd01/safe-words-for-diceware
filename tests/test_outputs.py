@@ -1,6 +1,6 @@
 """Invariants of the committed wordlists, reports and filter files.
 
-These run without network access or WordNet; rebuilding with
+These need NLTK (for its stemmer) but no network access or WordNet; rebuilding with
 scripts/build_safe_wordlist.py must keep them true.
 """
 
@@ -10,6 +10,8 @@ import json
 import re
 import unittest
 from pathlib import Path
+
+from nltk.stem import SnowballStemmer
 
 from scripts import safe_wordlist_rules as rules
 
@@ -67,15 +69,18 @@ class OutputInvariantsTest(unittest.TestCase):
                 self.assertIn(line.split()[0], candidates, f"{path}: {line}")
 
     def test_no_phrase_denylist_pair_is_reachable(self):
-        safe = {rules.stem_word(word) for word in self.safe}
+        stem = SnowballStemmer("english").stem
+        safe = {stem(word) for word in self.safe}
         for line in entries("filters/phrase-denylist.txt"):
-            tokens = [rules.stem_word(t) for t in line.split()]
+            tokens = [stem(t) for t in line.split()]
             self.assertFalse(all(t in safe for t in tokens), line)
 
-    def test_no_two_safe_words_are_close_variants_of_each_other(self):
-        # A cheap proxy for the duplicate rule: no word is another plus an 's'.
-        safe = set(self.safe)
-        self.assertEqual(sorted(w for w in safe if w.endswith("s") and w[:-1] in safe), [])
+    def test_no_two_safe_words_share_a_stem(self):
+        stem = SnowballStemmer("english").stem
+        by_stem = {}
+        for word in self.safe:
+            by_stem.setdefault(stem(word), []).append(word)
+        self.assertEqual([group for group in by_stem.values() if len(group) > 1], [])
 
 
 class FilterFileFormatTest(unittest.TestCase):

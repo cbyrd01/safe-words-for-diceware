@@ -95,14 +95,15 @@ Rules marked † look only at the word's main (most frequent) sense.
 | gendered † | definitions saying "male" or "female" (`rooster`, `lioness`) |
 | proper-name | countries (`chile`, `panama`) and nationality adjectives |
 | verb-form | verb forms with no attested noun use (`tore`, `seizing`) |
-| profanity-list, scowl-usage | words on LDNOOBW, dsojevic, or marked offensive or vulgar by SCOWL |
-| duplicate | spelling variants (`racoon`), exact synonyms (`cougar`/`puma`), plurals of listed words |
+| profanity-list, scowl-usage | words on LDNOOBW or dsojevic (exact or plural match: `snowballing` is slang, `snowball` is not), or marked offensive or vulgar by SCOWL |
+| duplicate | spelling variants (`racoon`), exact synonyms (`cougar`/`puma`), and words sharing a Snowball stem with a listed word (`stairs`, `housing`, `magnetism`); the commoner, then shorter, word is kept |
 | manual-denylist | review decisions in `filters/denylist.txt` |
 | combination | one word of every flagged pair (see below) |
 
 ## Combination screening
 
-Accepted words are checked as pairs:
+Accepted words are checked as pairs, matching phrase words by Snowball stem
+(so `brown showers` matches `brown` + `shower`):
 - Every multi-word entry in the profanity lists and in
   `filters/phrase-denylist.txt`.
 - Every WordNet compound, open (`couch potato`) or closed (`doormat`), that
@@ -115,7 +116,7 @@ ties drop the less common word.
 
 ## Commonness and size
 
-SCOWL size ≤ 50 (medium dictionary) gives 2,655 words. Size 60 would add
+SCOWL size ≤ 50 (medium dictionary) gives 2,634 words. Size 60 would add
 ~700 words (+0.3 bits/word), most of them obscure (`calcimine`, `reactance`,
 `refection`). Allowing 10-letter words adds 270 (+0.1 bits/word). Neither
 is worth the loss in memorability. Passphrase strength comes from word

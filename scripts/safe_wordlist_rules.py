@@ -176,15 +176,7 @@ class Overrides:
     waivers: Mapping[str, frozenset] = field(default_factory=dict)
 
 
-def stem_word(word: str) -> str:
-    """Conservative English plural stripping, used to match phrase tokens."""
-    if len(word) <= 3:
-        return word
-    if word.endswith("ies") and len(word) > 4:
-        return word[:-3] + "y"
-    if word.endswith("s") and not word.endswith(("ss", "us", "is")):
-        return word[:-1]
-    return word
+Stemmer = Callable[[str], str]  # the build uses NLTK's Snowball English stemmer
 
 
 def common_senses(senses: Iterable[Sense]) -> list[Sense]:
@@ -352,16 +344,22 @@ def is_duplicate_pair(a: str, b: str, synsets_of: Mapping[str, frozenset]) -> bo
     return bool(mine & theirs) and (mine <= theirs or theirs <= mine) and close_spelling(a, b)
 
 
-def find_plural_pairs(words: Iterable[str]) -> dict[str, str]:
-    """Plural-looking words whose singular is also present ('stairs' ->
-    'stair'); keeping both invites recall mistakes."""
-    present = set(words)
-    pairs = {}
-    for word in sorted(present):
-        singular = stem_word(word)
-        if singular != word and singular in present:
-            pairs[word] = singular
-    return pairs
+def find_stem_duplicates(
+    words: Iterable[str], stem: Stemmer, keep_priority: Callable[[str], tuple]
+) -> dict[str, str]:
+    """Words sharing a stem ('stair'/'stairs', 'house'/'housing'); keeping
+    both invites recall mistakes. Each group keeps the word with the
+    smallest ``keep_priority``. Returns dropped -> kept."""
+    groups: dict[str, list[str]] = {}
+    for word in sorted(words):
+        groups.setdefault(stem(word.lower()), []).append(word)
+    dropped: dict[str, str] = {}
+    for group in groups.values():
+        keeper = min(group, key=keep_priority)
+        for word in group:
+            if word != keeper:
+                dropped[word] = keeper
+    return dropped
 
 
 def find_duplicates(
@@ -452,19 +450,20 @@ class Conflict:
 def find_phrase_conflicts(
     accepted: Iterable[str],
     phrases: Iterable[tuple[tuple[str, ...], str]],
+    stem: Stemmer,
 ) -> list[Conflict]:
     """Flag phrases (e.g. 'golden shower') whose every token is an accepted word.
 
-    Tokens are matched after plural stripping, so 'brown showers' still
-    matches the words 'brown' and 'shower'.
+    Tokens are matched by stem, so 'brown showers' still matches the words
+    'brown' and 'shower'.
     """
-    by_key = {stem_word(word): word for word in accepted}
+    by_key = {stem(word): word for word in accepted}
     conflicts: list[Conflict] = []
     seen: set[tuple[str, ...]] = set()
     for tokens, source in phrases:
         if len(tokens) < 2:
             continue
-        matched = [by_key.get(stem_word(token)) for token in tokens]
+        matched = [by_key.get(stem(token)) for token in tokens]
         if any(word is None for word in matched):
             continue
         words = tuple(dict.fromkeys(matched))
@@ -478,20 +477,21 @@ def find_phrase_conflicts(
 def find_compound_conflicts(
     accepted: Iterable[str],
     compounds: Iterable[tuple[str, str]],
+    stem: Stemmer,
 ) -> list[Conflict]:
     """Flag closed compounds (e.g. 'pothead') that split into two accepted words.
 
     ``compounds`` holds (compound, source) pairs. The second half is matched
-    after plural stripping, so 'potheads' still matches 'head'.
+    by stem, so 'potheads' still matches 'head'.
     """
     accepted_set = set(accepted)
-    by_key = {stem_word(word): word for word in accepted_set}
+    by_key = {stem(word): word for word in accepted_set}
     conflicts: list[Conflict] = []
     seen: set[tuple[str, str]] = set()
     for compound, source in compounds:
         for split in range(MIN_WORD_LENGTH, len(compound) - MIN_WORD_LENGTH + 1):
             first = compound[:split]
-            second = by_key.get(stem_word(compound[split:]))
+            second = by_key.get(stem(compound[split:]))
             if first not in accepted_set or second is None or (first, second) in seen:
                 continue
             seen.add((first, second))

@@ -265,6 +265,7 @@ fondu       # variant spelling of fondue
 hommos      # variant spelling of hummus
 lichee      # variant spelling of lychee
 mesquit     # variant spelling of mesquite
+morn        # archaic form of morning (keeps 'morning' in the stem group)
 papaw       # variant spelling of pawpaw
 pilaw       # variant spelling of pilaf
 ricksha     # variant spelling of rickshaw

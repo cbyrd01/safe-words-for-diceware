@@ -14,7 +14,7 @@ harmless but `big sister` is not, so this list contains neither.
 
 | File | Words | Bits/word | Use |
 |---|---|---|---|
-| [`wordlists/safe-words.txt`](wordlists/safe-words.txt) | 2,655 | 11.4 | Software generators (`secrets.choice`) |
+| [`wordlists/safe-words.txt`](wordlists/safe-words.txt) | 2,634 | 11.4 | Software generators (`secrets.choice`) |
 | [`wordlists/safe-diceware-1296.txt`](wordlists/safe-diceware-1296.txt) | 1,296 | 10.3 | Physical dice: roll 4 dice per word |
 
 The dice list holds the 1,296 most common words of the full list.
@@ -52,8 +52,9 @@ Full details and measurements are in
    or body, is labelled obscene, slur or disparaging, or is about sex, drugs,
    alcohol, violence, death, religion, disease or a country. It is also
    rejected if it appears in the LDNOOBW or dsojevic profanity lists, or is
-   gendered, a verb form, a plural, a spelling variant or a synonym of
-   another word on the list.
+   gendered or a verb form. Duplicates are removed: spelling variants,
+   exact synonyms, and words sharing a stem (lowercase → Snowball stem →
+   unique, so `stair`/`stairs` and `house`/`housing` keep one word).
 3. **Combination screening.** Pairs of words are checked against the
    multi-word entries of the profanity lists, unsafe WordNet compounds
    (`couch potato`, `night owl`, `fruitcake`) and `filters/phrase-denylist.txt`.
